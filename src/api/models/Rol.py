@@ -1,4 +1,4 @@
-from database.db import db
+from api.database.db import db
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import  Enum
 import enum
