@@ -1,0 +1,23 @@
+from database.db import db
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import  Enum
+import enum
+
+class Role(enum.Enum): 
+    client = "client",
+    profesional = "profesional"
+
+
+class Rol(db.Model):
+    __tablename__ = "rol"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    type: Mapped[Role] = mapped_column(Enum(Role))
+   
+
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "type":self.type
+        }
