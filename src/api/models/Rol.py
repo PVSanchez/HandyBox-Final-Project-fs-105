@@ -1,11 +1,11 @@
 from api.database.db import db
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import  Enum
 import enum
 
 class Role(enum.Enum): 
     client = "client",
-    profesional = "profesional"
+    professional = "professional"
 
 
 class Rol(db.Model):
@@ -13,11 +13,12 @@ class Rol(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     type: Mapped[Role] = mapped_column(Enum(Role))
+    
    
-
+    users = relationship("User", back_populates="rol")
 
     def serialize(self):
         return {
             "id": self.id,
-            "type":self.type
+            "type": self.type.value[0] if self.type else None
         }
