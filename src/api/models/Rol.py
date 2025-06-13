@@ -4,7 +4,7 @@ from sqlalchemy import  Enum
 import enum
 
 class Role(enum.Enum): 
-    client = "client",
+    client = "client"
     professional = "professional"
 
 
@@ -20,5 +20,5 @@ class Rol(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "type": self.type.value[0] if self.type else None
+            "type": self.type.value if self.type else None
         }

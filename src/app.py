@@ -10,7 +10,7 @@ from api.database.db import db
 from api.routes.user import api as user_api
 from api.admin import setup_admin
 from api.commands import setup_commands
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from flask_jwt_extended import JWTManager
 
 # from models import Person
@@ -19,8 +19,9 @@ ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../dist/')
 app = Flask(__name__)
+CORS(app, supports_credentials=True, origins=["https://musical-fishstick-g4r7w9xjrxjw3q4-3000.app.github.dev"])
 app.register_blueprint(user_api, url_prefix='/api/user')
-CORS(app, supports_credentials=True, origins=["https://supreme-memory-pjwpqv74wpxwc5wj-3000.app.github.dev"])
+
 app.url_map.strict_slashes = False
 
 
@@ -65,6 +66,7 @@ def serve_any_other_file(path):
     response = send_from_directory(static_file_dir, path)
     response.cache_control.max_age = 0  # avoid cache memory
     return response
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

@@ -1,10 +1,12 @@
 from api.models.User import User
+from api.models.Rol import Rol, Role
 from flask import Blueprint, jsonify, request
 from api.database.db import db
 import bcrypt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 import re
 from datetime import datetime
+from flask_cors import cross_origin
 
 api = Blueprint('api/user', __name__)
 
@@ -24,10 +26,9 @@ def validate_password(password):
     return True
 
 def get_rol_id_by_type(rol_type):
-    if rol_type == "client":
-        return 1
-    elif rol_type == "professional":
-        return 2
+    rol = Rol.query.filter_by(type=rol_type).first()
+    if rol:
+        return rol.id
     return None
 
 @api.route('/', methods=['GET'])
@@ -37,10 +38,12 @@ def get_users():
     return jsonify(all_user_serialize), 200
 
 @api.route('/register/<rol_type>', methods=['POST', 'OPTIONS'])
+@cross_origin(origins="https://musical-fishstick-g4r7w9xjrxjw3q4-3000.app.github.dev", supports_credentials=True)
 def user_register(rol_type):
     if request.method == 'OPTIONS':
-        return '', 200
-        
+        response = jsonify({'ok': True})
+        return response, 200
+
     try:
         body = request.get_json()
         
@@ -84,6 +87,7 @@ def user_register(rol_type):
         return jsonify({'error': str(e)}), 500
 
 @api.route('/login', methods=['POST', 'OPTIONS'])
+@cross_origin()
 def user_login():
     if request.method == 'OPTIONS':
         return '', 200
@@ -112,6 +116,7 @@ def user_login():
         return jsonify({'error': str(e)}), 500
 
 @api.route('/logout', methods=['POST', 'OPTIONS'])
+@cross_origin()
 @jwt_required()
 def user_logout():
     if request.method == 'OPTIONS':

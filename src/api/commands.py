@@ -1,6 +1,6 @@
-
 import click
-from api.models import db, User
+from api.models.User import User
+from api.database.db import db
 
 """
 In this file, you can add as many commands as you want using the @app.cli.command decorator
@@ -32,3 +32,14 @@ def setup_commands(app):
     @app.cli.command("insert-test-data")
     def insert_test_data():
         pass
+
+    @app.cli.command("insert-roles")
+    def insert_roles():
+        from api.models.Rol import Rol, Role
+        from api.database.db import db
+        if not Rol.query.filter_by(id=1).first():
+            db.session.add(Rol(id=1, type=Role.client))
+        if not Rol.query.filter_by(id=2).first():
+            db.session.add(Rol(id=2, type=Role.professional))
+        db.session.commit()
+        print("Roles creados correctamente")
