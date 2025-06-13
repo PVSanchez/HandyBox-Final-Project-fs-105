@@ -87,10 +87,11 @@ def user_register(rol_type):
         return jsonify({'error': str(e)}), 500
 
 @api.route('/login', methods=['POST', 'OPTIONS'])
-@cross_origin()
+@cross_origin(origins="https://musical-fishstick-g4r7w9xjrxjw3q4-3000.app.github.dev", supports_credentials=True)
 def user_login():
     if request.method == 'OPTIONS':
-        return '', 200
+        response = jsonify({'ok': True})
+        return response, 200
 
     try:
         body = request.get_json()
@@ -131,4 +132,35 @@ def user_logout():
         return jsonify({'message': 'Sesión cerrada exitosamente'}), 200
         
     except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@api.route('/user', methods=['PUT', 'OPTIONS'])
+@cross_origin(origins="https://musical-fishstick-g4r7w9xjrxjw3q4-3000.app.github.dev", supports_credentials=True)
+@jwt_required()
+def update_user():
+    if request.method == 'OPTIONS':
+        response = jsonify({'ok': True})
+        return response, 200
+    try:
+        current_user_id = int(get_jwt_identity())
+        user = User.query.get(current_user_id)
+        if not user:
+            return jsonify({'error': 'Usuario no encontrado'}), 404
+        body = request.get_json()
+        for field in ['user_name', 'first_name', 'last_name', 'email', 'password']:
+            if field in body and body[field]:
+                if field == 'password':
+                    if not validate_password(body['password']):
+                        return jsonify({'error': 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número'}), 400
+                    user.password = bcrypt.hashpw(body['password'].encode(), bcrypt.gensalt()).decode()
+                elif field == 'email':
+                    if not validate_email(body['email']):
+                        return jsonify({'error': 'Formato de email inválido'}), 400
+                    user.email = body['email']
+                else:
+                    setattr(user, field, body[field])
+        db.session.commit()
+        return jsonify({'message': 'Usuario actualizado', 'user': user.serialize()}), 200
+    except Exception as e:
+        db.session.rollback()
         return jsonify({'error': str(e)}), 500

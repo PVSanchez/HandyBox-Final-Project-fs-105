@@ -15,6 +15,7 @@ export const Signup = () => {
     const [state, setState] = useState(INITIAL_STATE)
     const [error, setError] = useState('')
     const [rolType, setRolType] = useState('client')
+    const [repeatPassword, setRepeatPassword] = useState('')
 
     const handleChange = (event) => {
         const inputName = event.target.name
@@ -25,6 +26,10 @@ export const Signup = () => {
 
     const validateForm = () => {
         const validations = {
+            match: {
+                test: (pass) => pass === repeatPassword,
+                message: 'Las contraseñas no coinciden'
+            },
             length: {
                 test: (pass) => pass.length >= 8,
                 message: 'La contraseña debe tener al menos 8 caracteres'
@@ -42,8 +47,7 @@ export const Signup = () => {
                 message: 'La contraseña debe contener al menos un número'
             }
         }
-
-        for (const [key, validation] of Object.entries(validations)) {
+        for (const validation of Object.values(validations)) {
             if (!validation.test(state.password)) {
                 setError(validation.message)
                 return false
@@ -147,6 +151,18 @@ export const Signup = () => {
                                     />
                                 </div>
                                 <div className="mb-3">
+                                    <label htmlFor="repeatPassword" className="form-label">Repetir contraseña</label>
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        id="repeatPassword"
+                                        name="repeatPassword"
+                                        value={repeatPassword}
+                                        onChange={event => setRepeatPassword(event.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-3">
                                     <label className="form-label">Tipo de usuario</label>
                                     <div className="form-check">
                                         <input
@@ -156,7 +172,7 @@ export const Signup = () => {
                                             id="client"
                                             value="client"
                                             checked={rolType === 'client'}
-                                            onChange={(e) => setRolType(e.target.value)}
+                                            onChange={(event) => setRolType(event.target.value)}
                                         />
                                         <label className="form-check-label" htmlFor="client">
                                             Cliente
@@ -170,7 +186,7 @@ export const Signup = () => {
                                             id="professional"
                                             value="professional"
                                             checked={rolType === 'professional'}
-                                            onChange={(e) => setRolType(e.target.value)}
+                                            onChange={(event) => setRolType(event.target.value)}
                                         />
                                         <label className="form-check-label" htmlFor="professional">
                                             Profesional
