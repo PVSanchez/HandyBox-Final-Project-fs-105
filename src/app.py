@@ -8,6 +8,7 @@ from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
 from api.database.db import db
 from api.routes.user import api as user_api
+from api.routes.service import api as service_api
 from api.admin import setup_admin
 from api.commands import setup_commands
 
@@ -21,6 +22,7 @@ static_file_dir = os.path.join(os.path.dirname(
 app = Flask(__name__)
 
 app.register_blueprint(user_api, url_prefix='/api/user')
+app.register_blueprint(service_api, url_prefix='/api/service')
 
 app.url_map.strict_slashes = False
 
