@@ -1,6 +1,6 @@
 from sqlalchemy import String, Enum, Float, ForeignKey, Boolean
 from sqlalchemy.orm import Mapped, mapped_column
-from database.db import db
+from api.database.db import db
 import enum
 
 class Media(enum.Enum): 

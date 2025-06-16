@@ -6,9 +6,10 @@ import bcrypt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 import re
 from datetime import datetime
-from flask_cors import cross_origin
+from flask_cors import CORS
 
 api = Blueprint('api/user', __name__)
+CORS(api)
 
 def validate_email(email):
     pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -38,7 +39,6 @@ def get_users():
     return jsonify(all_user_serialize), 200
 
 @api.route('/register/<rol_type>', methods=['POST', 'OPTIONS'])
-@cross_origin(origins="https://musical-fishstick-g4r7w9xjrxjw3q4-3000.app.github.dev", supports_credentials=True)
 def user_register(rol_type):
     if request.method == 'OPTIONS':
         response = jsonify({'ok': True})
@@ -59,6 +59,7 @@ def user_register(rol_type):
             return jsonify({'error': 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número'}), 400
 
         rol_id = get_rol_id_by_type(rol_type)
+        print (rol_id, rol_type)
         if rol_id is None:
             return jsonify({'error': 'El tipo de rol debe ser "client" o "professional"'}), 400
 
@@ -87,7 +88,6 @@ def user_register(rol_type):
         return jsonify({'error': str(e)}), 500
 
 @api.route('/login', methods=['POST', 'OPTIONS'])
-@cross_origin(origins="https://musical-fishstick-g4r7w9xjrxjw3q4-3000.app.github.dev", supports_credentials=True)
 def user_login():
     if request.method == 'OPTIONS':
         response = jsonify({'ok': True})
@@ -117,7 +117,6 @@ def user_login():
         return jsonify({'error': str(e)}), 500
 
 @api.route('/logout', methods=['POST', 'OPTIONS'])
-@cross_origin()
 @jwt_required()
 def user_logout():
     if request.method == 'OPTIONS':
@@ -135,7 +134,6 @@ def user_logout():
         return jsonify({'error': str(e)}), 500
 
 @api.route('/user', methods=['PUT', 'OPTIONS'])
-@cross_origin(origins="https://musical-fishstick-g4r7w9xjrxjw3q4-3000.app.github.dev", supports_credentials=True)
 @jwt_required()
 def update_user():
     if request.method == 'OPTIONS':
