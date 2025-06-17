@@ -14,6 +14,18 @@ def get_all_service():
     all_service_serialize = list(map(lambda service: service.serialize(), all_service))
     return jsonify(all_service_serialize), 200
 
+@api.route('/users/<int:user_id>')
+def get_services_by_user(user_id):
+    current_user = User.query.get(user_id)
+
+    if not current_user:
+        return jsonify({'error': "Usuario no encontrado"}), 404
+    
+    user_services = Service.query.filter_by(user_id=user_id).all()
+    services_serialized = list(map(lambda serv: serv.serialize(), user_services))
+
+    return jsonify(services_serialized), 200
+
 @api.route('/register', methods=['POST'])
 @jwt_required()
 def create_service():
