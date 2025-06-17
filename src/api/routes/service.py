@@ -3,9 +3,10 @@ from api.models.Service import Service
 from api.models.User import User
 from api.database.db import db
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_cors import CORS
 
 api = Blueprint('api/service', __name__)
-
+CORS(api)
 
 @api.route('/', methods=['GET'])
 def get_all_service():
