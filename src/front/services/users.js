@@ -113,8 +113,63 @@ const LogoutUser = async() => {
     }
 }
 
+const getCurrentUser = async () => {
+    try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        const url = `${backendUrl}api/user/me`;
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+            return { success: false, error: 'No hay token de sesión' };
+        }
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token.trim()}`
+            }
+        });
+        const data = await response.json();
+        if (response.ok) {
+            return { success: true, data };
+        }
+        return { success: false, error: data.error || 'Error al obtener usuario' };
+    } catch (error) {
+        console.error('Error al obtener usuario:', error);
+        return { success: false, error: 'Error de conexión al obtener usuario' };
+    }
+};
+
+const updateUser = async (userData) => {
+    try {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        const url = `${backendUrl}api/user/me`;
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+            return { success: false, error: 'No hay token de sesión' };
+        }
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token.trim()}`
+            },
+            body: JSON.stringify(userData)
+        });
+        const data = await response.json();
+        if (response.ok) {
+            return { success: true, data };
+        }
+        return { success: false, error: data.error || 'Error al actualizar usuario' };
+    } catch (error) {
+        console.error('Error al actualizar usuario:', error);
+        return { success: false, error: 'Error de conexión al actualizar usuario' };
+    }
+};
+
 export const userService = {
     SignupUser,
     LoginUser,
-    LogoutUser
-}
+    LogoutUser,
+    getCurrentUser,
+    updateUser
+};
