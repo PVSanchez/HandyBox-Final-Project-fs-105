@@ -15,9 +15,9 @@ class Service(db.Model):
     video: Mapped[str] = mapped_column(String(255), nullable=True)
     price: Mapped[float] = mapped_column(Float, nullable=False)
     url: Mapped[str] = mapped_column(String(120), nullable=True)
-    rate: Mapped[float] = mapped_column(Float, nullable=False)
+    rate: Mapped[float] = mapped_column(Float, nullable=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
-    status: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    status: Mapped[bool] = mapped_column(Boolean, nullable=True, default=True)
 
 
 

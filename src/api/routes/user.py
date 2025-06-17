@@ -133,6 +133,7 @@ def user_logout():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
 @api.route('/me', methods=['PUT', 'OPTIONS', 'GET'])
 @jwt_required()
 def update_user():
