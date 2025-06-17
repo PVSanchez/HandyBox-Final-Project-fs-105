@@ -133,7 +133,7 @@ def user_logout():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@api.route('/user', methods=['PUT', 'OPTIONS'])
+@api.route('/me', methods=['PUT', 'OPTIONS', 'GET'])
 @jwt_required()
 def update_user():
     if request.method == 'OPTIONS':
@@ -144,6 +144,8 @@ def update_user():
         user = User.query.get(current_user_id)
         if not user:
             return jsonify({'error': 'Usuario no encontrado'}), 404
+        if request.method == 'GET':
+            return jsonify(user.serialize()), 200
         body = request.get_json()
         for field in ['user_name', 'first_name', 'last_name', 'email', 'password']:
             if field in body and body[field]:

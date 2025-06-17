@@ -19,6 +19,8 @@ class Service(db.Model):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     status: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
+
+
     def serialize(self):
         return{
             "id": self.id,
