@@ -27,6 +27,9 @@ def create_service():
     current_user_id = int(get_jwt_identity())
     user = User.query.get(current_user_id)
 
+    if user.rol_id is 1:
+        return jsonify({"Error": "El usuario no tiene permiso"}), 400
+
     if not user:
         return jsonify({'error': 'Usuario no encontrado'}), 404
     existing_name = Service.query.filter_by(name=body["name"]).first()
