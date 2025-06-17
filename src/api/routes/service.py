@@ -7,6 +7,12 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 api = Blueprint('api/service', __name__)
 
 
+@api.route('/', methods=['GET'])
+def get_all_service():
+    all_service = Service.query.all()
+    all_service_serialize = list(map(lambda service: service.serialize(), all_service))
+    return jsonify(all_service_serialize), 200
+
 @api.route('/register', methods=['POST'])
 @jwt_required()
 def create_service():
