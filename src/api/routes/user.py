@@ -7,9 +7,18 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 import re
 from datetime import datetime
 from flask_cors import CORS
+import cloudinary
+import cloudinary.uploader
+import os
 
 api = Blueprint('api/user', __name__)
 CORS(api)
+
+cloudinary.config(
+    cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.getenv('CLOUDINARY_API_KEY'),
+    api_secret=os.getenv('CLOUDINARY_API_SECRET')
+)
 
 def validate_email(email):
     pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -46,7 +55,15 @@ def user_register(rol_type):
 
     try:
         body = request.get_json()
-        
+        img_url = None
+        if 'img' in body and body['img']:
+            try:
+                upload_result = cloudinary.uploader.upload(body['img'], folder="handybox_users")
+                img_url = upload_result.get('secure_url')
+            except Exception as img_exc:
+                print('ERROR SUBIENDO IMAGEN A CLOUDINARY:', img_exc)
+                img_url = None
+
         required_fields = ['email', 'password', 'user_name', 'first_name', 'last_name']
         for field in required_fields:
             if field not in body or not body[field]:
@@ -77,6 +94,8 @@ def user_register(rol_type):
         new_user.last_name = body['last_name']
         new_user.date = datetime.now()
         new_user.rol_id = rol_id
+        new_user.img = img_url 
+
 
         db.session.add(new_user)
         db.session.commit() 
@@ -148,7 +167,7 @@ def update_user():
         if request.method == 'GET':
             return jsonify(user.serialize()), 200
         body = request.get_json()
-        for field in ['user_name', 'first_name', 'last_name', 'email', 'password']:
+        for field in ['user_name', 'first_name', 'last_name', 'email', 'password', 'img']:
             if field in body and body[field]:
                 if field == 'password':
                     if not validate_password(body['password']):

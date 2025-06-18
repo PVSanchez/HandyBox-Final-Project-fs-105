@@ -15,6 +15,7 @@ class User(db.Model):
     password: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True))
     rol_id: Mapped[int] = mapped_column(ForeignKey("rol.id"))
+    img: Mapped[str] = mapped_column(String(500),  nullable=True)
     
     
     rol = relationship("Rol", back_populates="users")
@@ -28,5 +29,6 @@ class User(db.Model):
             "email": self.email,
             "date": self.date,
             "rol_id": self.rol_id,
-            "rol": self.rol.serialize() if self.rol else None
+            "rol": self.rol.serialize() if self.rol else None,
+            "img": self.img
         }

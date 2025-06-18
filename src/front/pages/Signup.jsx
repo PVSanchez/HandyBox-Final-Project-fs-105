@@ -7,7 +7,8 @@ const INITIAL_STATE = {
     password: '',
     user_name: '',
     first_name: '',
-    last_name: ''
+    last_name: '',
+    img: ''
 }
 
 export const Signup = () => {
@@ -23,6 +24,19 @@ export const Signup = () => {
         setState({ ...state, [inputName]: inputValue })
         setError('')
     }
+
+    const handleImageChange = (event) => {
+        const file = event.target.files[0]
+        if (file) {
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                setState(prev => ({ ...prev, img: reader.result }))
+            }
+            reader.readAsDataURL(file)
+        }
+    }
+
+    const defaultImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png"
 
     const validateForm = () => {
         const validations = {
@@ -83,6 +97,14 @@ export const Signup = () => {
                 <div className="col-md-6">
                     <div className="card">
                         <div className="card-body">
+                            <div className="d-flex justify-content-center mb-4">
+                                <img
+                                    src={state.img || defaultImg}
+                                    alt="preview"
+                                    className="rounded-circle border border-2 img-fluid"
+                                    width="120" height="120"
+                                />
+                            </div>
                             <h2 className="text-center mb-4">Registro</h2>
                             {error && (
                                 <div className="alert alert-danger" role="alert">
@@ -90,6 +112,17 @@ export const Signup = () => {
                                 </div>
                             )}
                             <form onSubmit={handleSubmit}>
+                                <div className="mb-3">
+                                    <label htmlFor="img" className="form-label">Imagen de perfil</label>
+                                    <input
+                                        type="file"
+                                        className="form-control"
+                                        id="img"
+                                        name="img"
+                                        accept="image/*"
+                                        onChange={handleImageChange}
+                                    />
+                                </div>
                                 <div className="mb-3">
                                     <label htmlFor="email" className="form-label">Email</label>
                                     <input
