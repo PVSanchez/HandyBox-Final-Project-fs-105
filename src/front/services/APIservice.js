@@ -19,7 +19,7 @@ export const createService = async (serviceData) => {
     const token = sessionStorage.getItem("token");
     if (!token) return { success: false, error: "No hay token de sesión" };
 
-    const response = await fetch(`${URL}/api/service/register`, {
+    const response = await fetch(`${URL}api/service/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

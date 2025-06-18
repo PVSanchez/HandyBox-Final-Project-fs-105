@@ -6,10 +6,10 @@ const INITIAL_STATE = {
     name: '',
     description: '',
     price: '',
-    img: '',
-    video: '',
-    url: '',
-    rate: '',
+    img: null,
+    video: null,
+    url: null,
+    rate: null,
     status: true
 };
 
@@ -28,7 +28,7 @@ export const CreateService = () => {
         e.preventDefault();
         const result = await createService(form);
         if (result.success) {
-            navigate('/services'); // Redirige a lista de servicios u otra vista
+            navigate('/services');
         } else {
             setError(result.error);
         }

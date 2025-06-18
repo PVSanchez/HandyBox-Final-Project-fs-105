@@ -55,6 +55,7 @@ def create_service():
     if existing_name:
         return jsonify({"error": "Nombre de servicio ya existente"}), 400
 
+    print('Antes dee crear el seervicio', body)
     new_service = Service(
         name=body["name"],
         description=body['description'],
