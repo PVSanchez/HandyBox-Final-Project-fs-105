@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 0e50c8d20752
+Revision ID: cf2646d3d0c9
 Revises: 
-Create Date: 2025-06-16 17:03:32.870168
+Create Date: 2025-06-17 14:05:39.515724
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0e50c8d20752'
+revision = 'cf2646d3d0c9'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,6 +32,7 @@ def upgrade():
     sa.Column('password', sa.String(length=120), nullable=False),
     sa.Column('date', sa.DateTime(timezone=True), nullable=False),
     sa.Column('rol_id', sa.Integer(), nullable=False),
+    sa.Column('img', sa.String(length=120), nullable=True),
     sa.ForeignKeyConstraint(['rol_id'], ['rol.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
@@ -42,12 +43,13 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=120), nullable=False),
     sa.Column('description', sa.String(length=255), nullable=False),
-    sa.Column('media_type', sa.Enum('image', 'video', name='media'), nullable=True),
+    sa.Column('img', sa.String(length=255), nullable=True),
+    sa.Column('video', sa.String(length=255), nullable=True),
     sa.Column('price', sa.Float(), nullable=False),
     sa.Column('url', sa.String(length=120), nullable=True),
-    sa.Column('rate', sa.Float(), nullable=False),
+    sa.Column('rate', sa.Float(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('status', sa.Boolean(), nullable=False),
+    sa.Column('status', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
