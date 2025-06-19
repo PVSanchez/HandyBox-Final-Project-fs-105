@@ -1,0 +1,10 @@
+:root {
+  --primary-color: #00D1B2;
+  --accent-blue: #3ABEFF;
+  --deep-blue: #1F3A93;
+  --light-bg: #F4F4F4;
+}
+body {
+  background-color: var(--light-bg);
+  color: var(--deep-blue);
+}
