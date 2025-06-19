@@ -7,7 +7,8 @@ const INITIAL_STATE = {
     password: '',
     user_name: '',
     first_name: '',
-    last_name: ''
+    last_name: '',
+    img: '' 
 }
 
 export const ModifyUser = () => {
@@ -20,16 +21,17 @@ export const ModifyUser = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const userData = await userService.getCurrentUser()
-                if (userData) {
+                const response = await userService.getCurrentUser()
+                if (response && response.success && response.data) {
                     setState({
-                        email: userData.email || '',
+                        email: '', 
                         password: '',
-                        user_name: userData.user_name || '',
-                        first_name: userData.first_name || '',
-                        last_name: userData.last_name || ''
+                        user_name: response.data.user_name || '',
+                        first_name: response.data.first_name || '',
+                        last_name: response.data.last_name || '',
+                        img: response.data.img || ''
                     })
-                    setRolType(userData.role || 'client')
+                    setRolType(response.data.role || 'client')
                 }
             } catch (error) {
                 console.error("Error al obtener datos del usuario:", error)
@@ -106,12 +108,33 @@ export const ModifyUser = () => {
         }
     }
 
+    const handleImageChange = (event) => {
+        const file = event.target.files[0]
+        if (file) {
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                setState(prev => ({ ...prev, img: reader.result }))
+            }
+            reader.readAsDataURL(file)
+        }
+    }
+
+    const defaultImg = "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+
     return (
         <div className="container mt-5">
             <div className="row justify-content-center">
                 <div className="col-md-6">
                     <div className="card">
                         <div className="card-body">
+                            <div className="d-flex justify-content-center mb-4">
+                                <img
+                                    src={state.img || defaultImg}
+                                    alt="preview"
+                                    className="rounded-circle border border-2 img-fluid"
+                                    width="120" height="120"
+                                />
+                            </div>
                             <h2 className="text-center mb-4">Modificar Perfil</h2>
                             {error && (
                                 <div className="alert alert-danger" role="alert">
@@ -119,6 +142,17 @@ export const ModifyUser = () => {
                                 </div>
                             )}
                             <form onSubmit={handleSubmit}>
+                                <div className="mb-3">
+                                    <label htmlFor="img" className="form-label">Imagen de perfil</label>
+                                    <input
+                                        type="file"
+                                        className="form-control"
+                                        id="img"
+                                        name="img"
+                                        accept="image/*"
+                                        onChange={handleImageChange}
+                                    />
+                                </div>
                                 <div className="mb-3">
                                     <label htmlFor="email" className="form-label">Email</label>
                                     <input
