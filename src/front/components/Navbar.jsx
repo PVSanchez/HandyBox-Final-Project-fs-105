@@ -16,6 +16,7 @@ export const Navbar = () => {
 						<li><Link className="dropdown-item justify-content-center" to="/signup">Signup</Link></li>
 						<li><Link className="dropdown-item justify-content-center" to="/modifyuser">Modificar Usuario</Link></li>
 						<li><Link className="dropdown-item justify-content-center" to="/services">Servicios</Link></li>
+						<li><Link className="dropdown-item justify-content-center" to="/createService">Crear Servicio</Link></li>
 					</ul>
 				</div>
 			</div>
