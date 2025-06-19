@@ -8,9 +8,10 @@ export const CardService = ({services}) => {
                 <div key={service.id} className="card" style={{ width: "18rem" }}>
                     <img src={service.img || "https://placeholder.pics/svg/300x200"} className="card-img-top" alt={service.name} />
                     <div className="card-body">
-                        <div className="card-text">{service.user_id} </div>
+                        <div className="card-text"><strong>{service.user_name}</strong></div>
                         <h5 className="card-title">{service.name}</h5>
                         <p className="card-text">{service.description}</p>
+                        <p className="card-text">{service.price}</p>
                         <a className="btn btn-primary">Ver más</a>
                     </div>
                 </div>

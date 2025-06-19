@@ -1,5 +1,5 @@
 from sqlalchemy import String, Float, ForeignKey, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from api.database.db import db
 
 
@@ -19,6 +19,8 @@ class Service(db.Model):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     status: Mapped[bool] = mapped_column(Boolean, nullable=True, default=True)
 
+    user = relationship("User")
+
 
 
     def serialize(self):
@@ -32,5 +34,6 @@ class Service(db.Model):
             "url": self.url,
             "rate": self.rate,
             "user_id": self.user_id,
+            "user_name": self.user.user_name if self.user else None,
             "status": self.status
         }
