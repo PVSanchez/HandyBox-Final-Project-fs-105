@@ -71,7 +71,7 @@ export const CreateService = () => {
                     <div className="spinner-border text-primary" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </div>
-                    <span className="text-primary">Cargando video...</span>
+                    <span className="text-primary">Subiendo contenido...</span>
                 </div>
             ) : (
                 <>
