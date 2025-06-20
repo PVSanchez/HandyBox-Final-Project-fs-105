@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { userService } from '../services/users'
 import { useNavigate } from "react-router-dom";
+import { Spinner } from "../components/Spinner";
 
 const INITIAL_STATE = {
     email: '',
@@ -8,7 +9,7 @@ const INITIAL_STATE = {
     user_name: '',
     first_name: '',
     last_name: '',
-    img: '' 
+    img: ''
 }
 
 export const ModifyUser = () => {
@@ -17,6 +18,7 @@ export const ModifyUser = () => {
     const [error, setError] = useState('')
     const [rolType, setRolType] = useState('client')
     const [repeatPassword, setRepeatPassword] = useState('')
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -24,7 +26,7 @@ export const ModifyUser = () => {
                 const response = await userService.getCurrentUser()
                 if (response && response.success && response.data) {
                     setState({
-                        email: '', 
+                        email: '',
                         password: '',
                         user_name: response.data.user_name || '',
                         first_name: response.data.first_name || '',
@@ -89,22 +91,18 @@ export const ModifyUser = () => {
         if (!validateForm()) {
             return
         }
-
+        setLoading(true)
         try {
-            const updateData = { ...state }
-            if (!updateData.password) {
-                delete updateData.password
-            }
-
-            const result = await userService.updateUser(updateData)
+            const result = await userService.updateUser(state, rolType)
+            setLoading(false)
             if (result.success) {
                 navigate('/')
             } else {
                 setError(result.error)
             }
         } catch (error) {
-            console.error("Error en la actualización:", error)
-            setError('Error al actualizar usuario')
+            setLoading(false)
+            setError('Error al modificar usuario')
         }
     }
 
@@ -141,92 +139,94 @@ export const ModifyUser = () => {
                                     {error}
                                 </div>
                             )}
-                            <form onSubmit={handleSubmit}>
-                                <div className="mb-3">
-                                    <label htmlFor="img" className="form-label">Imagen de perfil</label>
-                                    <input
-                                        type="file"
-                                        className="form-control"
-                                        id="img"
-                                        name="img"
-                                        accept="image/*"
-                                        onChange={handleImageChange}
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="email" className="form-label">Email</label>
-                                    <input
-                                        type="email"
-                                        className="form-control"
-                                        id="email"
-                                        name="email"
-                                        value={state.email}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="user_name" className="form-label">Nombre de usuario</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="user_name"
-                                        name="user_name"
-                                        value={state.user_name}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="first_name" className="form-label">Nombre</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="first_name"
-                                        name="first_name"
-                                        value={state.first_name}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="last_name" className="form-label">Apellido</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="last_name"
-                                        name="last_name"
-                                        value={state.last_name}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="password" className="form-label">Nueva Contraseña (opcional)</label>
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        id="password"
-                                        name="password"
-                                        value={state.password}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="repeatPassword" className="form-label">Repetir nueva contraseña</label>
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        id="repeatPassword"
-                                        name="repeatPassword"
-                                        value={repeatPassword}
-                                        onChange={event => setRepeatPassword(event.target.value)}
-                                    />
-                                </div>
-                                <button type="submit" className="btn btn-primary w-100">
-                                    Actualizar Perfil
-                                </button>
-                            </form>
+                            {loading ? <div className="text-center my-3"><Spinner /></div> : (
+                                <form onSubmit={handleSubmit}>
+                                    <div className="mb-3">
+                                        <label htmlFor="img" className="form-label">Imagen de perfil</label>
+                                        <input
+                                            type="file"
+                                            className="form-control"
+                                            id="img"
+                                            name="img"
+                                            accept="image/*"
+                                            onChange={handleImageChange}
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="email" className="form-label">Email</label>
+                                        <input
+                                            type="email"
+                                            className="form-control"
+                                            id="email"
+                                            name="email"
+                                            value={state.email}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="user_name" className="form-label">Nombre de usuario</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="user_name"
+                                            name="user_name"
+                                            value={state.user_name}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="first_name" className="form-label">Nombre</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="first_name"
+                                            name="first_name"
+                                            value={state.first_name}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="last_name" className="form-label">Apellido</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="last_name"
+                                            name="last_name"
+                                            value={state.last_name}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="password" className="form-label">Nueva Contraseña (opcional)</label>
+                                        <input
+                                            type="password"
+                                            className="form-control"
+                                            id="password"
+                                            name="password"
+                                            value={state.password}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="repeatPassword" className="form-label">Repetir nueva contraseña</label>
+                                        <input
+                                            type="password"
+                                            className="form-control"
+                                            id="repeatPassword"
+                                            name="repeatPassword"
+                                            value={repeatPassword}
+                                            onChange={event => setRepeatPassword(event.target.value)}
+                                        />
+                                    </div>
+                                    <button type="submit" className="custom-btn w-100">
+                                        Guardar cambios
+                                    </button>
+                                </form>
+                            )}
                         </div>
                     </div>
                 </div>

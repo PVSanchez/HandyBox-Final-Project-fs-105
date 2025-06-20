@@ -7,7 +7,7 @@ export const Navbar = () => {
 		<nav className="navbar">
 			<div className="container justify-content-center">
 				<div className="dropdown">
-					<button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+					<button className="custom-btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
 						Páginas
 					</button>
 					<ul className="dropdown-menu justify-content-center" aria-labelledby="dropdownMenuButton">
@@ -16,6 +16,8 @@ export const Navbar = () => {
 						<li><Link className="dropdown-item justify-content-center" to="/signup">Signup</Link></li>
 						<li><Link className="dropdown-item justify-content-center" to="/modifyuser">Modificar Usuario</Link></li>
 						<li><Link className="dropdown-item justify-content-center" to="/services">Servicios</Link></li>
+						<li><Link className="dropdown-item justify-content-center" to="/carrito">Carrito</Link></li>
+						<li><Link className="dropdown-item justify-content-center" to="/payment/0/EUR">Pago</Link></li>
 					</ul>
 				</div>
 			</div>

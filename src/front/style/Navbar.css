@@ -19,17 +19,29 @@ body {
 }
 
 .navbar .dropdown-toggle {
-  background-color: var(--primary-color);
+ background: linear-gradient(
+    90deg,
+    var(--primary-color) 0%,
+    var(--accent-blue) 100%
+  );
   border: none;
   width: 160px;
 }
 
 .navbar .dropdown-menu {
-  background-color: var(--accent-blue);
+ background: linear-gradient(
+    90deg,
+    var(--primary-color) 0%,
+    var(--accent-blue) 100%
+  );
   text-align: center;
 }
 
 .navbar .dropdown-menu .dropdown-item:hover {
-  background-color: var(--primary-color);
-  color: #fff 
+  background: linear-gradient(
+    90deg,
+    var(--deep-blue) 0%,
+    var(--primary-color) 100%
+  );
+  color: #fff;
 }
