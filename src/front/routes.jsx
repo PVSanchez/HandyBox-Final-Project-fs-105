@@ -14,6 +14,9 @@ import { Signup } from "./pages/Signup";
 import { Login } from "./pages/Login";
 import { ModifyUser } from "./pages/ModifyUser";
 import { Services } from "./pages/Services";
+import { PaymentPage } from "./pages/PaymentPage";
+import { Carrito } from "./pages/carrito";
+import { ResumenCompra } from "./pages/ResumenCompra";
 import { CreateService } from "./pages/CreateService";
 
 export const router = createBrowserRouter(
@@ -32,9 +35,12 @@ export const router = createBrowserRouter(
       <Route path="/single/:theId" element={<Single />} />  {/* Dynamic route for single items */}
       <Route path="/demo" element={<Demo />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/login" element={<Login />} /> 
-      <Route path="/modifyUser" element={<ModifyUser />} /> 
+      <Route path="/login" element={<Login />} />
+      <Route path="/modifyUser" element={<ModifyUser />} />
       <Route path="/services" element={<Services />} />
+      <Route path="/carrito" element={<Carrito />} />
+      <Route path="/payment/:totalAmount/:currency" element={<PaymentPage />} />
+      <Route path="/resumen" element={<ResumenCompra />} />
       <Route path="/createService" element={<CreateService />} />
     </Route>
   )
