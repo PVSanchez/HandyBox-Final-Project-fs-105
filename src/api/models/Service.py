@@ -1,5 +1,5 @@
 from sqlalchemy import String, Float, ForeignKey, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from api.database.db import db
 
 
@@ -12,12 +12,14 @@ class Service(db.Model):
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     description: Mapped[str] = mapped_column(String(255), nullable=False)
     img: Mapped[str] = mapped_column(String(255), nullable=True)
-    video: Mapped[str] = mapped_column(String(255), nullable=True)
+    video: Mapped[str] = mapped_column(String(500), nullable=True)
     price: Mapped[float] = mapped_column(Float, nullable=False)
     url: Mapped[str] = mapped_column(String(120), nullable=True)
     rate: Mapped[float] = mapped_column(Float, nullable=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     status: Mapped[bool] = mapped_column(Boolean, nullable=True, default=True)
+
+    user = relationship("User")
 
 
 
@@ -32,5 +34,6 @@ class Service(db.Model):
             "url": self.url,
             "rate": self.rate,
             "user_id": self.user_id,
+            "user_name": self.user.user_name if self.user else None,
             "status": self.status
         }

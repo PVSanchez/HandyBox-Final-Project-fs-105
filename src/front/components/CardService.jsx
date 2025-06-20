@@ -26,11 +26,13 @@ export const CardService = ({services}) => {
                 <div key={service.id} className="card" style={{ width: "18rem" }}>
                     <img src={service.img || "https://placeholder.pics/svg/300x200"} className="card-img-top" alt={service.name} />
                     <div className="card-body">
-                        <div className="card-text">{service.user_id} </div>
+                        <div className="card-text"><strong>{service.user_name}</strong></div>
                         <h5 className="card-title">{service.name}</h5>
                         <p className="card-text">{service.description}</p>
+                        <p className="card-text">{service.price}</p>
                         <a className="custom-btn-1 ms-2">Ver más</a>
                         <button className="custom-btn ms-2" onClick={() => addToCart(service)}>Añadir al carrito</button>
+                        
                     </div>
                 </div>
             ))}
