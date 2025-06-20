@@ -12,7 +12,7 @@ class Service(db.Model):
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     description: Mapped[str] = mapped_column(String(255), nullable=False)
     img: Mapped[str] = mapped_column(String(255), nullable=True)
-    video: Mapped[str] = mapped_column(String(255), nullable=True)
+    video: Mapped[str] = mapped_column(String(500), nullable=True)
     price: Mapped[float] = mapped_column(Float, nullable=False)
     url: Mapped[str] = mapped_column(String(120), nullable=True)
     rate: Mapped[float] = mapped_column(Float, nullable=True)
