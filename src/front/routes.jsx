@@ -15,9 +15,11 @@ import { Login } from "./pages/Login";
 import { ModifyUser } from "./pages/ModifyUser";
 import { Services } from "./pages/Services";
 import { PaymentPage } from "./pages/PaymentPage";
-import { Carrito } from "./pages/carrito";
+// import { Carrito } from "./pages/Carrito";
 import { ResumenCompra } from "./pages/ResumenCompra";
 import { CreateService } from "./pages/CreateService";
+import { ServicesPay } from "./pages/ServicesPay";
+import { ProfessionalServices } from "./pages/ProfessionalServices";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -38,10 +40,12 @@ export const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/modifyUser" element={<ModifyUser />} />
       <Route path="/services" element={<Services />} />
-      <Route path="/carrito" element={<Carrito />} />
+      {/* <Route path="/carrito" element={<Carrito />} /> */}
       <Route path="/payment/:totalAmount/:currency" element={<PaymentPage />} />
       <Route path="/resumen" element={<ResumenCompra />} />
       <Route path="/createService" element={<CreateService />} />
+      <Route path="/services-pay" element={<ServicesPay />} />
+      <Route path="/professional-services" element={<ProfessionalServices />} />
     </Route>
   )
 );

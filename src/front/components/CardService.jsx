@@ -17,7 +17,6 @@ export const CardService = ({services}) => {
             });
         }
         localStorage.setItem('cart', JSON.stringify(cart));
-        alert('Servicio añadido al carrito');
     };
 
     return (
