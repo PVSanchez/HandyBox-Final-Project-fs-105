@@ -31,13 +31,13 @@ export const ResumenCompra = () => {
                                                 <img src={item.image} alt={item.name} className="img-thumbnail me-3" style={{ width: '60px', height: '60px', objectFit: 'cover' }} />
                                             )}
                                             <div className="flex-grow-1">
-                                                <span>{item.name} - ${item.price} x {item.quantity}</span>
+                                                <span>{item.name} - {item.price} € x {item.quantity} horas = <strong>${(item.price * item.quantity).toFixed(2)}</strong> €</span>
                                             </div>
                                         </li>
                                     ))}
                                 </ul>
                             )}
-                            <h5 className="mt-3">Total pagado: ${total}</h5>
+                            <h5 className="mt-3">Total pagado: {total} €</h5>
                             <button className="custom-btn mt-3" onClick={() => navigate("/")}>Volver al inicio</button>
                         </div>
                     </div>
