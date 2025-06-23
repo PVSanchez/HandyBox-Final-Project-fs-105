@@ -16,9 +16,10 @@ export const Navbar = () => {
 						<li><Link className="dropdown-item justify-content-center" to="/signup">Signup</Link></li>
 						<li><Link className="dropdown-item justify-content-center" to="/modifyuser">Modificar Usuario</Link></li>
 						<li><Link className="dropdown-item justify-content-center" to="/services">Servicios</Link></li>
-						<li><Link className="dropdown-item justify-content-center" to="/carrito">Carrito</Link></li>
 						<li><Link className="dropdown-item justify-content-center" to="/payment/0/EUR">Pago</Link></li>
 						<li><Link className="dropdown-item justify-content-center" to="/createService">Crear Servicio</Link></li>
+						<li><Link className="dropdown-item justify-content-center" to="/services-pay">Servicios contratados</Link></li>
+						<li><Link className="dropdown-item justify-content-center" to="/professional-services">Servicios contratados a mí</Link></li>
 					</ul>
 				</div>
 			</div>

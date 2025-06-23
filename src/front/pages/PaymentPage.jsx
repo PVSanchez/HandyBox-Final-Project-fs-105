@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '../components/CheckoutForm';
@@ -8,11 +7,20 @@ import CheckoutForm from '../components/CheckoutForm';
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
 
 export const PaymentPage = () => {
-    const { totalAmount, currency } = useParams()
-    console.log(totalAmount)
-
+   
     const [clientSecret, setClientSecret] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [totalAmount, setTotalAmount] = useState(0)
+    const [currency, setCurrency] = useState('eur')
+
+    useEffect(() => {
+       
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const sum = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+        setTotalAmount(sum);
+       
+        setCurrency('eur'); 
+    }, [])
 
     useEffect(() => {
         if (!totalAmount || !currency) return
@@ -56,3 +64,5 @@ export const PaymentPage = () => {
         </Elements>
     )
 }
+
+export default PaymentPage;
