@@ -116,7 +116,7 @@ export const CreateService = () => {
                                             />
                                             <label className="form-check-label">Servicio activo</label>
                                         </div>
-                                        <button type="submit" className="btn btn-primary w-100">Crear Servicio</button>
+                                        <button type="submit" className="custom-btn-1 w-100">Crear Servicio</button>
                                     </form>
                                 </div>
                             </div>
