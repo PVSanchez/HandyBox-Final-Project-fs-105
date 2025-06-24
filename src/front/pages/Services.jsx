@@ -9,6 +9,7 @@ export const Services = () => {
   useEffect(() => {
     const fetchServices = async () => {
       const data = await getAllServices();
+      console.log(data)
       setServices(data);
     };
     fetchServices();

@@ -14,6 +14,20 @@ export const getAllServices = async () => {
   }
 };
 
+export const getServiceById = async (id) => {
+  try {
+    const response = await fetch(`${URL}api/service/${id}`);
+    if (!response.ok) {
+      throw new Error("Error al obtener el servicio");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error al realizar la petición:", error);
+    return null;
+  }
+};
+
 export const createService = async (serviceData) => {
   try {
     const token = sessionStorage.getItem("token");
@@ -23,7 +37,7 @@ export const createService = async (serviceData) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${token.trim()}`,
+        Authorization: `Bearer ${token.trim()}`,
       },
       body: JSON.stringify(serviceData),
     });
@@ -46,14 +60,13 @@ export const createStripePay = async (payData) => {
     const token = sessionStorage.getItem("token");
     if (!token) return { success: false, error: "No hay token de sesión" };
 
-    
     console.log("Enviando a /api/stripe-pay:", payData);
 
     const response = await fetch(`${URL}api/stripe-pay`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${token.trim()}`,
+        Authorization: `Bearer ${token.trim()}`,
       },
       body: JSON.stringify(payData),
     });
