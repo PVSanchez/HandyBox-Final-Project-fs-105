@@ -25,6 +25,12 @@ def get_all_service():
         map(lambda service: service.serialize(), all_service))
     return jsonify(all_service_serialize), 200
 
+@api.route('/<int:service_id>')
+def get_service_by_id(service_id):
+    id_service = Service.query.get(service_id)
+    if not id_service:
+        return jsonify({"error": "Servicio no encontrado"}), 404
+    return jsonify(id_service.serialize()), 200
 
 @api.route('/users/<int:user_id>')
 def get_services_by_user(user_id):

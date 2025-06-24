@@ -18,6 +18,7 @@ from flask_cors import CORS
 from api.routes.serviceState import api as service_state_api
 from api.routes.stripePay import api as stripe_pay_api
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 # from models import Person
 
