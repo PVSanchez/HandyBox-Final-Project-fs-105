@@ -2,8 +2,6 @@ from sqlalchemy import String, Float, ForeignKey, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from api.database.db import db
 
-
-
 class Service(db.Model):
 
     __tablename__="service"
@@ -21,8 +19,6 @@ class Service(db.Model):
 
     user = relationship("User")
 
-
-
     def serialize(self):
         return{
             "id": self.id,
@@ -34,6 +30,6 @@ class Service(db.Model):
             "url": self.url,
             "rate": self.rate,
             "user_id": self.user_id,
-            "user_name": self.user.user_name if self.user else None,
+            "user": self.user.serialize() if self.user else None,
             "status": self.status
         }

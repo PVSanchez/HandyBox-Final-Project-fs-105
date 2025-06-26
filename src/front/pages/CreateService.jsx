@@ -14,6 +14,7 @@ const INITIAL_STATE = {
 };
 
 export const CreateService = () => {
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
     const [form, setForm] = useState(INITIAL_STATE);
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -26,22 +27,28 @@ export const CreateService = () => {
     };
 
     const handleImageChange = (event) => {
-        const file = event.target.files[0]
-        if (file) {
-            const reader = new FileReader()
-            reader.onloadend = () => {
-                setForm(prev => ({ ...prev, img: reader.result }))
-            }
-            reader.readAsDataURL(file)
+        const file = event.target.files[0];
+        if (file && file.size > MAX_FILE_SIZE) {
+            setError("La imagen no puede superar los 10MB");
+            return;
         }
-    }
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setForm(prev => ({ ...prev, img: reader.result }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const handleVideoChange = (event) => {
         const file = event.target.files[0];
-        if (file && file.size > 50 * 1024 * 1024) {
-            setError("El video no puede superar los 50MB");
+        if (file && file.size > MAX_FILE_SIZE) {
+            setError("El video no puede superar los 10MB");
             return;
         }
+
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -88,7 +95,7 @@ export const CreateService = () => {
                                         </div>
                                         <div className="mb-3">
                                             <label className="form-label">Descripción</label>
-                                            <textarea name="description" value={form.description} onChange={handleChange} className="form-control" required />
+                                            <textarea name="description" value={form.description} onChange={handleChange} className="form-control" maxLength={255} required />
                                         </div>
                                         <div className="mb-3">
                                             <label className="form-label">Precio</label>
