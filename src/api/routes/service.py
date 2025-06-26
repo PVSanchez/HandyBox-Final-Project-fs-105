@@ -93,7 +93,7 @@ def create_service():
 
     if "price" not in body:
         return jsonify({"error": "Falta el precio"}), 400
-
+    
     existing_name = Service.query.filter_by(name=body["name"]).first()
 
     if existing_name:

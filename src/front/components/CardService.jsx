@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import { Link } from "react-router-dom";
 
 export const CardService = ({services}) => {
   
@@ -22,14 +23,16 @@ export const CardService = ({services}) => {
     return (
         <div className="d-flex flex-wrap justify-content-center gap-3">
             {services.map((service) => (
-                <div key={service.id} className="card" style={{ width: "18rem" }}>
-                    <img src={service.img || "https://placeholder.pics/svg/300x200"} className="card-img-top" alt={service.name} />
+                <div key={service.id} className="card" style={{ width: "300px" }}>
+                    <img src={service.img || "https://placeholder.pics/svg/300x200"} 
+                    className="card-img-top" 
+                    alt={service.name}
+                    style={{ width: "300px", height: "200px", objectFit: "cover" }}  />
+                    
                     <div className="card-body">
-                        <div className="card-text"><strong>{service.user_name}</strong></div>
                         <h5 className="card-title">{service.name}</h5>
-                        <p className="card-text">{service.description}</p>
-                        <p className="card-text">{service.price}</p>
-                        <a className="custom-btn-1 ms-2">Ver más</a>
+                        <p className="card-text">Desde {service.price}€</p>
+                        <Link className="custom-btn-1 ms-2" to={`/service/${service.id}`} >Ver más</Link>
                         <button className="custom-btn ms-2" onClick={() => addToCart(service)}>Añadir al carrito</button>
                         
                     </div>
