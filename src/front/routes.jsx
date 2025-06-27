@@ -20,6 +20,7 @@ import { ResumenCompra } from "./pages/ResumenCompra";
 import { CreateService } from "./pages/CreateService";
 import { ServicesPay } from "./pages/ServicesPay";
 import { ProfessionalServices } from "./pages/ProfessionalServices";
+import { UserDetail } from "./pages/UserDetail";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -45,6 +46,7 @@ export const router = createBrowserRouter(
       <Route path="/resumen" element={<ResumenCompra />} />
       <Route path="/createService" element={<CreateService />} />
       <Route path="/services-pay" element={<ServicesPay />} />
+      <Route path="/user-detail" element={<UserDetail />} />
       <Route path="/professional-services" element={<ProfessionalServices />} />
     </Route>
   )
