@@ -9,6 +9,7 @@ export const Services = () => {
   useEffect(() => {
     const fetchServices = async () => {
       const data = await getAllServices();
+      console.log(data)
       setServices(data);
     };
     fetchServices();
@@ -17,7 +18,11 @@ export const Services = () => {
   return (
     <div className="container text-center mt-5">
       <h1 className="display-3 fw-bold">Página de servicios</h1>
-      <CardService services={services}/>
+      {services.length > 0 ? (
+        <CardService services={services} />
+      ) : (
+        <p className="mt-4 fs-4 lead">No existe ningún servicio.</p>
+      )}
     </div>
   );
 };
