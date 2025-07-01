@@ -20,7 +20,9 @@ import { ResumenCompra } from "./pages/ResumenCompra";
 import { CreateService } from "./pages/CreateService";
 import { ServicesPay } from "./pages/ServicesPay";
 import { ProfessionalServices } from "./pages/ProfessionalServices";
+import { UserDetail } from "./pages/UserDetail";
 import { ServiceDetail  } from "./pages/ServiceDetail";
+import { CreateUserDetail } from "./pages/CreateUserDetail";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,8 +37,6 @@ export const router = createBrowserRouter(
 
       {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
       <Route path="/" element={<Home />} />
-      <Route path="/single/:theId" element={<Single />} />  {/* Dynamic route for single items */}
-      <Route path="/demo" element={<Demo />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
       <Route path="/modifyUser" element={<ModifyUser />} />
@@ -46,8 +46,10 @@ export const router = createBrowserRouter(
       <Route path="/resumen" element={<ResumenCompra />} />
       <Route path="/createService" element={<CreateService />} />
       <Route path="/services-pay" element={<ServicesPay />} />
+      <Route path="/user-detail" element={<UserDetail />} />
       <Route path="/professional-services" element={<ProfessionalServices />} />
       <Route path="/service/:id" element={<ServiceDetail />} />
+      <Route path="/create-user-detail" element={<CreateUserDetail />} />
     </Route>
   )
 );

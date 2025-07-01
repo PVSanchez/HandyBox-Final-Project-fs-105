@@ -167,23 +167,25 @@ export const ServiceDetail = () => {
                     <div className="col-4">
                         <h5 className="card-title my-2">Servicio ofrecido por:</h5>
                         <div className="d-flex justify-content-center">
-                            <div className="card text-center align-items-center" style={{ width: "100%" }}>
-                                <img
-                                    src={service.user.img || defaultImg}
-                                    className="card-img-top mt-3"
-                                    alt={`Foto de ${service.user.user_name}`}
-                                    style={{ width: "150px", borderRadius: "50%" }}
-                                />
-
-                                <div className="card-body">
-                                    <ul className="list-group list-group-flush mb-3">
-                                        <li className="list-group-item py-3 px-2" style={{color: '#1F3A93', fontWeight: '500'}}>Nombre: {service.user.first_name}</li>
-                                        <li className="list-group-item py-3 px-2" style={{color: '#1F3A93', fontWeight: '500'}}>Apellidos: {service.user.last_name}</li>
-                                        <li className="list-group-item py-3 px-2" style={{color: '#1F3A93', fontWeight: '500'}}>Email: {service.user.email}</li>
-                                    </ul>
-
+                            <Link to={`/user-detail?id=${service.user_id}`} style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
+                                <div className="card text-center align-items-center" style={{ width: "100%" }}>
+                                    <img
+                                        src={service.user.img || defaultImg}
+                                        className="card-img-top mt-3"
+                                        alt={`Foto de ${service.user.user_name}`}
+                                        style={{ width: "150px", borderRadius: "50%" }}
+                                    />
+                                    <div className="card-body">
+                                        <ul className="list-group list-group-flush mb-3">
+                                            <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>
+                                                Nombre: <span className="fw-bold text-decoration-underline">{service.user.first_name}</span>
+                                            </li>
+                                            <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>Apellidos: {service.user.last_name}</li>
+                                            <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>Email: {service.user.email}</li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
+                            </Link>
                         </div>
                         <div className="card card-body mt-3">
                             <h4 className="mb-3">Servicio a pagar</h4>
