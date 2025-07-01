@@ -18,7 +18,7 @@ export const Signup = () => {
     const [error, setError] = useState('')
     const [rolType, setRolType] = useState('client')
     const [repeatPassword, setRepeatPassword] = useState('')
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false)
 
     const handleChange = (event) => {
         const inputName = event.target.name
@@ -82,10 +82,25 @@ export const Signup = () => {
         setLoading(true)
         try {
             const result = await userService.SignupUser(state, rolType)
-            setLoading(false)
             if (result.success) {
-                navigate('/login')
+                if (rolType === 'professional') {
+                    const loginRes = await userService.LoginUser({
+                        email: state.email,
+                        password: state.password
+                    })
+                    setLoading(false)
+                    if (loginRes.success) {
+                        navigate('/create-user-detail')
+                    } else {
+                        setError('Usuario creado, pero error al iniciar sesión automáticamente. Inicia sesión manualmente.')
+                        navigate('/login')
+                    }
+                } else {
+                    setLoading(false)
+                    navigate('/login')
+                }
             } else {
+                setLoading(false)
                 setError(result.error)
             }
         } catch (error) {
