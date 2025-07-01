@@ -15,6 +15,7 @@ from api.admin import setup_admin
 from api.commands import setup_commands
 from api.routes.stripe import api as payment_api
 from api.routes.stripePay import api as stripe_pay_api
+from api.routes.rate import api as rate_api 
 
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
@@ -31,6 +32,7 @@ app.register_blueprint(user_api, url_prefix='/api/user')
 app.register_blueprint(service_api, url_prefix='/api/service')
 app.register_blueprint(payment_api, url_prefix='/api/payment')
 app.register_blueprint(stripe_pay_api, url_prefix='/api/stripe-pay')
+app.register_blueprint(rate_api, url_prefix='/api/rate')
     
 
 app.url_map.strict_slashes = False
