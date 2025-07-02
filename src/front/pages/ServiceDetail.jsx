@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { getServiceById } from "../services/APIservice";
+import { CommentCard } from "../components/CommentCard";
+import {getRatesByServiceId } from "../services/APIrates";
 
 export const ServiceDetail = () => {
 
@@ -8,6 +10,7 @@ export const ServiceDetail = () => {
 
     const { id } = useParams();
     const [service, setService] = useState([]);
+    const [rates, setRates] = useState([]);
     const [loading, setLoading] = useState(true)
     const [selectedMedia, setSelectedMedia] = useState([])
     const [quantity, setQuantity] = useState(1);
@@ -28,6 +31,20 @@ export const ServiceDetail = () => {
         };
         fetchService();
     }, [id]);
+
+    useEffect(() => {
+        const fetchRates = async () => {
+            try {
+                const ratesData = await getRatesByServiceId(id);
+                setRates(ratesData);
+                
+            } catch (error) {
+                console.error("Error al obtener las valoraciones:", error);
+            }
+        };
+        fetchRates();
+    }, [id]);
+
     //Actualización dinámica del precio
     useEffect(() => {
         if (service.price) {
@@ -161,8 +178,10 @@ export const ServiceDetail = () => {
                                 </div>
                             )}
                         </div>
-                        <h3>Descripción</h3>
+                        <h3 className="my-3">Descripción</h3>
                         <p>{service.description} </p>
+                        <h3 className="my-3">Comentarios</h3>
+                        <CommentCard rates = {rates}/>
                     </div>
                     <div className="col-4">
                         <h5 className="card-title my-2">Servicio ofrecido por:</h5>
@@ -177,9 +196,9 @@ export const ServiceDetail = () => {
 
                                 <div className="card-body">
                                     <ul className="list-group list-group-flush mb-3">
-                                        <li className="list-group-item py-3 px-2" style={{color: '#1F3A93', fontWeight: '500'}}>Nombre: {service.user.first_name}</li>
-                                        <li className="list-group-item py-3 px-2" style={{color: '#1F3A93', fontWeight: '500'}}>Apellidos: {service.user.last_name}</li>
-                                        <li className="list-group-item py-3 px-2" style={{color: '#1F3A93', fontWeight: '500'}}>Email: {service.user.email}</li>
+                                        <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>Nombre: {service.user.first_name}</li>
+                                        <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>Apellidos: {service.user.last_name}</li>
+                                        <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>Email: {service.user.email}</li>
                                     </ul>
 
                                 </div>
