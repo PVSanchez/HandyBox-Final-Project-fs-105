@@ -75,6 +75,7 @@ export const ServiceDetail = () => {
         }
 
         localStorage.setItem('cart', JSON.stringify(storedCart));
+        window.dispatchEvent(new Event('cartChanged'));
         navigate("/payment/:totalAmount/:currency");
     };
 

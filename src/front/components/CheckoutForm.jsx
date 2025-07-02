@@ -28,6 +28,7 @@ const CheckoutForm = ({ clientSecret }) => {
         )
         setCart(updatedCart)
         localStorage.setItem('cart', JSON.stringify(updatedCart))
+        window.dispatchEvent(new Event('cartChanged'));
         const sum = updatedCart.reduce((acc, item) => acc + (item.price * item.quantity), 0)
         setTotal(sum)
     }
@@ -36,6 +37,7 @@ const CheckoutForm = ({ clientSecret }) => {
         const updatedCart = cart.filter(item => item.id !== id);
         setCart(updatedCart);
         localStorage.setItem('cart', JSON.stringify(updatedCart));
+        window.dispatchEvent(new Event('cartChanged'));
         const sum = updatedCart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
         setTotal(sum);
     };
@@ -105,7 +107,7 @@ const CheckoutForm = ({ clientSecret }) => {
                                                     )}
                                                     <div className="d-flex align-items-center w-100 justify-content-between">
                                                         <div style={{ fontWeight: 500, fontSize: '1.08rem' }}>{item.name}</div>
-                                                        <button type="button" className="btn btn-link btn-sm p-0 ms-2 text-danger" style={{textDecoration: 'none'}} onClick={() => handleRemove(item.id)}>
+                                                        <button type="button" className="btn btn-link btn-sm p-0 ms-2 text-danger" style={{ textDecoration: 'none' }} onClick={() => handleRemove(item.id)}>
                                                             🗑️
                                                         </button>
                                                     </div>
