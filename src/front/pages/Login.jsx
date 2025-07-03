@@ -39,7 +39,7 @@ export const Login = () => {
         <div className="container">
             <div className="row justify-content-center">
                 <div className="col-md-6">
-                    <h1 className="text-center">Login</h1>
+                    <h1 className="text-center display-3 fw-bold">Login</h1>
                     {logoutMsg && <div className="alert alert-info">{logoutMsg}</div>}
                     {error && <div className="alert alert-danger">{error}</div>}
                     {loading ? <div className="text-center my-3"><Spinner /></div> : (

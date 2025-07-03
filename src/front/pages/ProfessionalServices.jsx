@@ -69,7 +69,7 @@ export const ProfessionalServices = () => {
 
     return (
         <div className="container mt-4">
-            <h2>Servicios que te han contratado</h2>
+            <h1 className="text-center display-3 fw-bold">Servicios que te han contratado</h1>
             <div className="row justify-content-center g-4">
                 {contracts.map((contract, index) => {
                     const totalServicio = contract.service ? ((contract.service.price || 0) * (contract.hours || 1)) : 0;
