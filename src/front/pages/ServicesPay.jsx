@@ -42,7 +42,7 @@ export const ServicesPay = () => {
 
   return (
     <div className="services-pay-container">
-      <h2>Resumen de Servicios Contratados</h2>
+      <h1 className="text-center display-3 fw-bold">Resumen de Servicios Contratados</h1>
       <div className="payments-list row justify-content-center g-4">
         {contracts.map((contract, idx) => {
           const service = getServiceById(contract.service_id)
