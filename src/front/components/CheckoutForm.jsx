@@ -77,6 +77,7 @@ const CheckoutForm = ({ clientSecret }) => {
             setSuccessMsg("¡Pago realizado correctamente!")
             localStorage.setItem('lastPurchase', JSON.stringify(cart))
             localStorage.removeItem('cart')
+            window.dispatchEvent(new Event('cartChanged'))
             setCart([])
             setTimeout(() => {
                 navigate("/resumen")

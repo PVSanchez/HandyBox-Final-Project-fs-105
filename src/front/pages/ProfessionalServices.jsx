@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../style/ProfessionalServices.css"; 
+import { Spinner } from "../components/Spinner";
 
 const URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -62,7 +63,7 @@ export const ProfessionalServices = () => {
         }
     };
 
-    if (loading) return <div>Cargando...</div>
+    if (loading) return <Spinner/>
     if (isProfessional === false) return <div>Acceso solo para profesionales.</div>
     if (error) return <div>{error}</div>
     if (!contracts.length) return <div>No te han contratado servicios aún.</div>

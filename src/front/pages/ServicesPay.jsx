@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAllServices } from "../services/APIservice";
+import { Spinner } from "../components/Spinner";
 
 const URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -34,7 +35,7 @@ export const ServicesPay = () => {
     fetchData()
   }, [])
 
-  if (loading) return <div>Cargando...</div>
+  if (loading) return <Spinner />
   if (error) return <div>{error}</div>
   if (!contracts.length) return <div>No hay servicios contratados.</div>
 
