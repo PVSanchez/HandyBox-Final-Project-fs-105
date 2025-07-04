@@ -113,7 +113,7 @@ const LogoutUser = async() => {
     }
 }
 
-const getCurrentUser = async () => {
+export const getCurrentUser = async () => {
     try {
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         const url = `${backendUrl}api/user/me`;

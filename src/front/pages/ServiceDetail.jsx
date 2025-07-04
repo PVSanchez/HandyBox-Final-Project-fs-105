@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { getServiceById } from "../services/APIservice";
 import { CommentCard } from "../components/CommentCard";
-import {getRatesByServiceId } from "../services/APIrates";
+import { getRatesByServiceId } from "../services/APIrates";
+import { getCurrentUser } from "../services/users";
+import { RateModal } from "../components/RateModa";
 
 export const ServiceDetail = () => {
 
@@ -16,6 +18,8 @@ export const ServiceDetail = () => {
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState(0);
     const navigate = useNavigate();
+    const [currentUser, setCurrentUser] = useState(null);
+    const [userHasPaidService, setUserHasPaidService] = useState(false);
 
     useEffect(() => {
         const fetchService = async () => {
@@ -37,13 +41,49 @@ export const ServiceDetail = () => {
             try {
                 const ratesData = await getRatesByServiceId(id);
                 setRates(ratesData);
-                
+
             } catch (error) {
                 console.error("Error al obtener las valoraciones:", error);
             }
         };
         fetchRates();
     }, [id]);
+
+    useEffect(() => {
+        const checkUserAndPayment = async () => {
+            const userResponse = await getCurrentUser();
+            if (userResponse.success) {
+                setCurrentUser(userResponse.data);
+
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const token = sessionStorage.getItem('token');
+
+                try {
+                    const response = await fetch(`${backendUrl}api/stripe-pay/user`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const payments = await response.json();
+
+                    // Verifica si el id del servicio actual está en alguno de los pagos
+                    const hasPaid = payments.some(payment => {
+                        const serviceIds = payment.service_ids || [];
+                        return serviceIds.includes(String(id));
+                    });
+
+                    setUserHasPaidService(hasPaid);
+                } catch (error) {
+                    console.error('Error al comprobar pagos del usuario:', error);
+                }
+            }
+        };
+
+        checkUserAndPayment();
+    }, [id]);
+
 
     //Actualización dinámica del precio
     useEffect(() => {
@@ -87,7 +127,7 @@ export const ServiceDetail = () => {
                 name: service.name,
                 price: service.price,
                 quantity: quantity,
-                image: service.img || "", // asegúrate que coincida con el campo usado en CheckoutForm
+                image: service.img || "",
             });
         }
 
@@ -181,7 +221,19 @@ export const ServiceDetail = () => {
                         <h3 className="my-3">Descripción</h3>
                         <p>{service.description} </p>
                         <h3 className="my-3">Comentarios</h3>
-                        <CommentCard rates = {rates}/>
+                        <CommentCard rates={rates} />
+                        {currentUser && userHasPaidService && (
+                            <div className="text-center my-3">
+                                <button
+                                    className="custom-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#rateModal"
+                                >
+                                    Dejar valoración
+                                </button>
+                            </div>
+                        )}
+
                     </div>
                     <div className="col-4">
                         <h5 className="card-title my-2">Servicio ofrecido por:</h5>
@@ -249,6 +301,9 @@ export const ServiceDetail = () => {
             <Link to="/services" className="custom-btn ms-2">
                 Volver a servicios
             </Link>
+            {/* Llama al modal */}
+            <RateModal
+            />
         </div >
     )
 }

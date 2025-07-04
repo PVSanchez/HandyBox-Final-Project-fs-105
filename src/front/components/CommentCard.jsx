@@ -1,8 +1,6 @@
 import React from "react";
 
 export const CommentCard = ({ rates }) => {
-    console.log(rates)
-    console.log(rates.comment)
     return (
         <div>
             {rates.map((rate) => (
