@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getAllServices } from "../services/APIservice";
+import { Spinner } from "../components/Spinner";
 
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 export const ServicesPay = () => {
-  const [payments, setPayments] = useState([]);
+  const [contracts, setContracts] = useState([]);
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,18 +13,21 @@ export const ServicesPay = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${URL}/api/stripe-pay/user`, {
+        const token = sessionStorage.getItem('token');
+        const userData = JSON.parse(sessionStorage.getItem('user'))
+        const statesRes = await fetch(`${URL}/api/service-state/`, {
           headers: {
-            'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+            'Authorization': `Bearer ${token}`
           }
         })
-        if (!response.ok) throw new Error("No autorizado o error en pagos")
-        const pagos = await response.json()
-        setPayments(pagos)
+        if (!statesRes.ok) throw new Error("No autorizado o error en servicios contratados")
+        const allStates = await statesRes.json()
+        const userStates = allStates.filter(s => s.client_id === userData.id)
+        setContracts(userStates)
         const allServices = await getAllServices()
-        setServices(allServices);
+        setServices(allServices)
       } catch (err) {
-        setError("Error al cargar los pagos o servicios")
+        setError("Error al cargar los servicios contratados")
       } finally {
         setLoading(false)
       }
@@ -31,52 +35,42 @@ export const ServicesPay = () => {
     fetchData()
   }, [])
 
-  if (loading) return <div>Cargando...</div>
+  if (loading) return <Spinner />
   if (error) return <div>{error}</div>
-  if (!payments.length) return <div>No hay servicios contratados.</div>
-
-  const user = payments[0]?.user
+  if (!contracts.length) return <div>No hay servicios contratados.</div>
 
   const getServiceById = (id) => services.find(s => String(s.id) === String(id))
 
   return (
     <div className="services-pay-container">
-      <h2>Resumen de Servicios Contratados</h2>
-      {user && (
-        <div className="user-info">
-          <p><strong>Usuario:</strong> {user.name || user.email}</p>
-        </div>
-      )}
-      <div className="payments-list row g-2">
-        {payments.map((pay, idx) => (
-          <div key={pay.id || idx} className="payment-card col-12 col-md-6 col-lg-4 mb-3 p-2">
-            <div className="card border shadow-sm h-100" style={{ minWidth: '220px', maxWidth: '270px', margin: '0 auto', fontSize: '0.98rem' }}>
-              <div className="card-body p-2">
-                <p className="mb-1"><strong>Fecha:</strong> {pay.created_at ? new Date(pay.created_at).toLocaleString() : "-"}</p>
-                <p className="mb-1"><strong>Total Abonado:</strong> {pay.amount} {pay.currency}</p>
-                <div className="services-list row">
-                  {pay.service_ids.map((serviceId, i) => {
-                    const service = getServiceById(serviceId)
-                    const qty = pay.service_quantities[i]
-                    if (!service) return null
-                    return (
-                      <div key={serviceId} className="col-12 mb-2">
-                        <div className="d-flex align-items-center gap-2">
-                          <img src={service.img || "https://placeholder.pics/svg/60x40"} alt={service.name} style={{ width: '60px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} />
-                          <div>
-                            <div style={{ fontWeight: 500 }}>{service.name}</div>
-                            <div style={{ fontSize: '0.92rem' }}>Cantidad: <strong>{qty} horas</strong></div>
-                            <div style={{ fontSize: '0.92rem' }}>Total: <strong>${(service.price * qty).toFixed(2)}</strong></div>
-                          </div>
+      <h1 className="text-center display-3 fw-bold">Resumen de Servicios Contratados</h1>
+      <div className="payments-list row justify-content-center g-4">
+        {contracts.map((contract, idx) => {
+          const service = getServiceById(contract.service_id)
+          return (
+            <div key={contract.id || idx} className="payment-card col-12 col-md-6 col-lg-4 d-flex align-items-stretch mb-4">
+              <div className="card border shadow-sm w-100 h-100 d-flex flex-column justify-content-between">
+                <div className="card-body">
+                  <p className="mb-2"><strong>Fecha de contratación:</strong> {contract.date_register ? new Date(contract.date_register).toLocaleString() : "-"}</p>
+                  <div className="services-list row">
+                    <div className="col-12 mb-2">
+                      <div className="d-flex align-items-center gap-3">
+                        <img src={service?.img || "https://placeholder.pics/svg/120x80"} alt={service?.name} className="img-fluid rounded" style={{ maxWidth: '120px', maxHeight: '80px' }} />
+                        <div>
+                          <div className="fw-semibold" style={{ fontSize: '1.15rem', color: '#1a202c' }}>{service ? service.name : `Servicio ID: ${contract.service_id}`}</div>
+                          <div>Cantidad: <strong>{contract.hours} horas</strong></div>
+                          <div>Estado: <strong>{contract.status}</strong></div>
+                          <div>Profesional: <strong>{contract.profesional?.user_name || contract.profesional_id}</strong></div>
+                          <div>Última modificación: <strong>{contract.date_modify ? new Date(contract.date_modify).toLocaleString() : '-'}</strong></div>
                         </div>
                       </div>
-                    )
-                  })}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

@@ -3,7 +3,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { getServiceById } from "../services/APIservice";
 import { CommentCard } from "../components/CommentCard";
 import { getRatesByServiceId } from "../services/APIrates";
-import { getCurrentUser } from "../services/users";
+import { userService } from "../services/users";
 import { RateModal } from "../components/RateModa";
 
 export const ServiceDetail = () => {
@@ -51,7 +51,7 @@ export const ServiceDetail = () => {
 
     useEffect(() => {
         const checkUserAndPayment = async () => {
-            const userResponse = await getCurrentUser();
+            const userResponse = await userService.getCurrentUser();
             if (userResponse.success) {
                 setCurrentUser(userResponse.data);
 
@@ -132,6 +132,7 @@ export const ServiceDetail = () => {
         }
 
         localStorage.setItem('cart', JSON.stringify(storedCart));
+        window.dispatchEvent(new Event('cartChanged'));
         navigate("/payment/:totalAmount/:currency");
     };
 
@@ -238,23 +239,25 @@ export const ServiceDetail = () => {
                     <div className="col-4">
                         <h5 className="card-title my-2">Servicio ofrecido por:</h5>
                         <div className="d-flex justify-content-center">
-                            <div className="card text-center align-items-center" style={{ width: "100%" }}>
-                                <img
-                                    src={service.user.img || defaultImg}
-                                    className="card-img-top mt-3"
-                                    alt={`Foto de ${service.user.user_name}`}
-                                    style={{ width: "150px", borderRadius: "50%" }}
-                                />
-
-                                <div className="card-body">
-                                    <ul className="list-group list-group-flush mb-3">
-                                        <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>Nombre: {service.user.first_name}</li>
-                                        <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>Apellidos: {service.user.last_name}</li>
-                                        <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>Email: {service.user.email}</li>
-                                    </ul>
-
+                            <Link to={`/user-detail?id=${service.user_id}`} style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
+                                <div className="card text-center align-items-center" style={{ width: "100%" }}>
+                                    <img
+                                        src={service.user.img || defaultImg}
+                                        className="card-img-top mt-3"
+                                        alt={`Foto de ${service.user.user_name}`}
+                                        style={{ width: "150px", borderRadius: "50%" }}
+                                    />
+                                    <div className="card-body">
+                                        <ul className="list-group list-group-flush mb-3">
+                                            <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>
+                                                Nombre: <span className="fw-bold text-decoration-underline">{service.user.first_name}</span>
+                                            </li>
+                                            <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>Apellidos: {service.user.last_name}</li>
+                                            <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>Email: {service.user.email}</li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
+                            </Link>
                         </div>
                         <div className="card card-body mt-3">
                             <h4 className="mb-3">Servicio a pagar</h4>
@@ -283,7 +286,7 @@ export const ServiceDetail = () => {
                                             aria-label="Cantidad de horas"
                                         />
                                         <span className="ms-3">
-                                            <span class="ms-1"> horas </span>
+                                            <span className="ms-1"> horas </span>
                                             = <span className="fw-bold">{total.toFixed(2)} €</span>
                                         </span>
                                     </div>

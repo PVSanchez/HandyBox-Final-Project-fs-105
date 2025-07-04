@@ -40,10 +40,10 @@ export const RateModal = ({ onSubmit, serviceId, clientId, stripeId }) => {
                 <div className="modal-content">
                     <div className="modal-header">
                         <h1 className="modal-title fs-5" id="exampleModalLabel">Valorar servicio</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body">
-                        <h7 className="modal-title">Puntua el servicio:</h7>
+                        <p className="modal-title">Puntua el servicio:</p>
                         <div className="text-center mb-3">
                             {[1, 2, 3, 4, 5].map((star) => (
                                 <span
@@ -66,8 +66,8 @@ export const RateModal = ({ onSubmit, serviceId, clientId, stripeId }) => {
                             </div>
                         )}
 
-                        <div class="mb-3">
-                            <label for="comment" className="form-label">Comentario:</label>
+                        <div className="mb-3">
+                            <label htmlFor="comment" className="form-label">Comentario:</label>
                             <textarea className="form-control" id="comment" rows="3"></textarea>
                         </div>
                     </div>

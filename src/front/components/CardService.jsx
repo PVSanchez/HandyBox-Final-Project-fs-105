@@ -17,7 +17,8 @@ export const CardService = ({services}) => {
                 image: service.img || "https://placeholder.pics/svg/300x200"
             });
         }
-        localStorage.setItem('cart', JSON.stringify(cart));
+        localStorage.setItem('cart', JSON.stringify(cart))
+        window.dispatchEvent(new Event('cartChanged'));
     };
 
     return (
