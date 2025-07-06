@@ -4,7 +4,7 @@ import { getServiceById } from "../services/APIservice";
 import { CommentCard } from "../components/CommentCard";
 import { getRatesByServiceId } from "../services/APIrates";
 import { userService } from "../services/users";
-import { RateModal } from "../components/RateModa";
+import { RateModal } from "../components/RateModal";
 
 export const ServiceDetail = () => {
 
@@ -20,6 +20,7 @@ export const ServiceDetail = () => {
     const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState(null);
     const [userHasPaidService, setUserHasPaidService] = useState(false);
+    const [stripeId, setStripeId] = useState("");
 
     useEffect(() => {
         const fetchService = async () => {
@@ -36,16 +37,17 @@ export const ServiceDetail = () => {
         fetchService();
     }, [id]);
 
-    useEffect(() => {
-        const fetchRates = async () => {
-            try {
-                const ratesData = await getRatesByServiceId(id);
-                setRates(ratesData);
+    const fetchRates = async () => {
+        try {
+            const ratesData = await getRatesByServiceId(id);
+            setRates(ratesData);
 
-            } catch (error) {
-                console.error("Error al obtener las valoraciones:", error);
-            }
-        };
+        } catch (error) {
+            console.error("Error al obtener las valoraciones:", error);
+        }
+    };
+
+    useEffect(() => {
         fetchRates();
     }, [id]);
 
@@ -54,6 +56,7 @@ export const ServiceDetail = () => {
             const userResponse = await userService.getCurrentUser();
             if (userResponse.success) {
                 setCurrentUser(userResponse.data);
+                console.log(currentUser)
 
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
                 const token = sessionStorage.getItem('token');
@@ -67,13 +70,20 @@ export const ServiceDetail = () => {
                         }
                     });
                     const payments = await response.json();
+                    console.log("Pagos recibidos del backend:", payments);
 
-                    // Verifica si el id del servicio actual está en alguno de los pagos
                     const hasPaid = payments.some(payment => {
                         const serviceIds = payment.service_ids || [];
-                        return serviceIds.includes(String(id));
-                    });
 
+                        console.log("Services id en el pago:", serviceIds);
+
+                        if (serviceIds.map(String).includes(String(id))) {
+                            console.log("Stripe ID encontrado:", payment.id);
+                            setStripeId(payment.id); // 💡 Aquí se guarda el ID correcto
+                            return true;
+                        }
+                        return false;
+                    });
                     setUserHasPaidService(hasPaid);
                 } catch (error) {
                     console.error('Error al comprobar pagos del usuario:', error);
@@ -306,6 +316,10 @@ export const ServiceDetail = () => {
             </Link>
             {/* Llama al modal */}
             <RateModal
+                serviceId={id}
+                clientId={currentUser?.id}
+                stripeId={stripeId}
+                onSuccess={fetchRates}
             />
         </div >
     )

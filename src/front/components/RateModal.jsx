@@ -1,36 +1,57 @@
 import React, { useState } from "react";
+import { postRate } from "../services/APIrates";
 
-export const RateModal = ({ onSubmit, serviceId, clientId, stripeId }) => {
+export const RateModal = ({ serviceId, clientId, stripeId, created_at, onSuccess }) => {
 
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleStarClick = (value) => {
         setRating(value);
         setError("")
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (rating < 1 || rating > 5) {
             setError("Selecciona una valoración entre 1 y 5 estrellas.");
             return;
         }
 
-        setError("");
+        if (!clientId || !serviceId || !stripeId) {
+            setError("Parece que hubo un error.");
+            return;
+        }
 
-        onSubmit({
-            client_rate: rating,
-            comment,
-            service_id: serviceId,
+        const rateData = {
             client_id: clientId,
+            service_id: serviceId,
             stripe_id: stripeId,
-        });
+            client_rate: rating,
+            created_at: created_at,
+            comment: comment
+        };
 
-        // Limpiar estado y cerrar
-        setRating(0);
-        setComment("");
-        onClose();
+        setLoading(true)
+
+        try {
+            await postRate(rateData);
+            if (onSuccess) onSuccess(); // refrescar valoraciones
+            setRating(0);
+            setComment("");
+            setError("");
+
+            // Cierra el modal con Bootstrap JS
+            const modal = bootstrap.Modal.getOrCreateInstance(document.querySelector('#rateModal'));
+            modal.hide();
+
+        } catch (err) {
+            setError(err.message || "Error al enviar la valoración.");
+        } finally {
+            setLoading(false);
+        }
+
     };
 
 
@@ -68,13 +89,19 @@ export const RateModal = ({ onSubmit, serviceId, clientId, stripeId }) => {
 
                         <div className="mb-3">
                             <label htmlFor="comment" className="form-label">Comentario:</label>
-                            <textarea className="form-control" id="comment" rows="3"></textarea>
+                            <textarea 
+                            className="form-control"
+                            id="comment" 
+                            rows="3"
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}>
+                            </textarea>
                         </div>
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button className="btn btn-primary" onClick={handleSubmit}>
-                            Enviar valoración
+                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button className="btn btn-primary" onClick={handleSubmit} disabled={loading}>
+                            {loading ? "Enviando..." : "Enviar valoración"}
                         </button>
                     </div>
                 </div>

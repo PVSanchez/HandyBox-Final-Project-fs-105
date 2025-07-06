@@ -13,8 +13,23 @@ export const CommentCard = ({ rates }) => {
                             style={{ height: "75px", width: "75px", borderRadius: "50%", objectFit: 'cover' }}
                         />
                         <div className="d-flex flex-column px-2">
-                            <h5 className="card-title">{rate.client?.first_name} {rate.client?.last_name}</h5>
-                            <span>⭐⭐⭐⭐⭐ {rate.client_rate}</span>
+                            <div className="d-flex">
+                                <h5 className="card-title m-0">{rate.client?.first_name} {rate.client?.last_name}</h5>
+                                <span className="mx-2 fst-italic font-monospace text-muted">{rate.created_at}</span>
+                            </div>
+                            <div className="d-flex">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <span
+                                        key={star}
+                                        style={{
+                                            fontSize: "1.3rem",
+                                            color: star <= rate.client_rate ? "#ffc107" : "#e4e5e9"
+                                        }}
+                                    >
+                                        ★
+                                    </span>
+                                ))}
+                            </div>
                         </div>
                     </div>
                     <div className="card-body px-0 py-4">

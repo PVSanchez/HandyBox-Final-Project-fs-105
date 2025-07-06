@@ -42,6 +42,11 @@ def create_rate():
     for field in required_fields:
         if field not in data:
             return jsonify({'error': f'Falta el campo {field}'}), 400
+        
+    existing_rate = Rate.query.filter_by(client_id = data['client_id'], stripe_id=data["stripe_id"]).first()
+    
+    if existing_rate:
+        return jsonify({"error": "Ya has valorado este servicio anteriormente."}), 409
 
     try:
         new_rate = Rate(
