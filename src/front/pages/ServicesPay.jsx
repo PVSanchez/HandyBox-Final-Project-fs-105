@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAllServices } from "../services/APIservice";
+import { Spinner } from "../components/Spinner";
 
 const URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -34,7 +35,7 @@ export const ServicesPay = () => {
     fetchData()
   }, [])
 
-  if (loading) return <div>Cargando...</div>
+  if (loading) return <Spinner />
   if (error) return <div>{error}</div>
   if (!contracts.length) return <div>No hay servicios contratados.</div>
 
@@ -42,7 +43,7 @@ export const ServicesPay = () => {
 
   return (
     <div className="services-pay-container">
-      <h2>Resumen de Servicios Contratados</h2>
+      <h1 className="text-center display-3 fw-bold">Resumen de Servicios Contratados</h1>
       <div className="payments-list row justify-content-center g-4">
         {contracts.map((contract, idx) => {
           const service = getServiceById(contract.service_id)

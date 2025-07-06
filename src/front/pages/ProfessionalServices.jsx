@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import "../style/ProfessionalServices.css"; 
+import { Spinner } from "../components/Spinner";
+
 
 const URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -53,22 +56,22 @@ export const ProfessionalServices = () => {
                 body: JSON.stringify({ status: newStatus })
             });
             if (!response.ok) throw new Error('No se pudo actualizar el estado');
-            // Refrescar estados tras actualizar
-            const updated = contracts.map(c => c.id === serviceStateId ? { ...c, status: newStatus } : c);
-            setContracts(updated);
+
+            const updated = contracts.map(contrated => contrated.id === serviceStateId ? { ...contrated, status: newStatus } : contrated)
+            setContracts(updated)
         } catch (err) {
             alert('Error al actualizar el estado del servicio');
         }
     };
 
-    if (loading) return <div>Cargando...</div>
+    if (loading) return <Spinner/>
     if (isProfessional === false) return <div>Acceso solo para profesionales.</div>
     if (error) return <div>{error}</div>
     if (!contracts.length) return <div>No te han contratado servicios aún.</div>
 
     return (
         <div className="container mt-4">
-            <h2>Servicios que te han contratado</h2>
+            <h1 className="text-center display-3 fw-bold">Servicios que te han contratado</h1>
             <div className="row justify-content-center g-4">
                 {contracts.map((contract, index) => {
                     const totalServicio = contract.service ? ((contract.service.price || 0) * (contract.hours || 1)) : 0;
@@ -79,7 +82,11 @@ export const ProfessionalServices = () => {
                                     <div className="row">
                                         <div className="col-12 mb-2">
                                             <div className="d-flex align-items-center gap-3 flex-wrap">
-                                                <img src={contract.service?.img || "https://placeholder.pics/svg/120x80"} alt={contract.service?.name} className="img-fluid rounded" />
+                                                <img
+                                                    src={contract.service?.img || "https://placeholder.pics/svg/120x80"}
+                                                    alt={contract.service?.name}
+                                                    className="img-fluid rounded service-img-thumb"
+                                                />
                                                 <div className="flex-grow-1 text-center">
                                                     <div className="fw-semibold" style={{ fontSize: '1.15rem', color: '#1a202c' }}>{contract.service ? contract.service.name : `Servicio ID: ${contract.service_id}`}</div>
                                                     {contract.client && (

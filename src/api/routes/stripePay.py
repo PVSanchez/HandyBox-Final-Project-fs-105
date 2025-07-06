@@ -40,7 +40,8 @@ def create_stripe_pay():
             if not service:
                 continue
             professional_user_id = service.user_id
-            service_hours = data['service_quantities'][index] if index < len(data['service_quantities']) else 1
+            service_hours = data['service_quantities'][index] if index < len(
+                data['service_quantities']) else 1
             service_state = ServiceState(
                 stripe_id=new_pay.id,
                 client_id=user_id,
@@ -58,4 +59,13 @@ def create_stripe_pay():
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
-
+@api.route('/user', methods=['GET'])
+@jwt_required()
+def get_user_stripe_pays():
+    user_id = get_jwt_identity()
+    try:
+        pagos = StripePay.query.filter_by(user_id=user_id).order_by(
+            StripePay.created_at.desc()).all()
+        return jsonify([pago.serialize() for pago in pagos]), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

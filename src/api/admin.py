@@ -6,6 +6,7 @@ from flask_admin.contrib.sqla import ModelView
 from api.models.Service import Service
 from api.models.Rol import Rol
 from api.models.StripePay import StripePay
+from api.models.Rate import Rate
 from api.models.ServiceState import ServiceState
 from api.models.UserDetail import UserDetail
 
@@ -21,6 +22,7 @@ def setup_admin(app):
     admin.add_view(ModelView(Rol, db.session))
     admin.add_view(ModelView(Service, db.session))
     admin.add_view(ModelView(StripePay, db.session))
+    admin.add_view(ModelView(Rate, db.session))
     admin.add_view(ModelView(ServiceState, db.session))
     admin.add_view(ModelView(UserDetail, db.session))
 

@@ -113,7 +113,7 @@ export const CreateUserDetail = () => {
 
     return (
         <div className="container mt-4">
-            <h2 className="mb-4 text-center">{isEdit ? "Actualizar" : "Crear"} Detalle de Usuario</h2>
+            <h1 className="mb-4 text-center display-3 fw-bold">{isEdit ? "Actualizar" : "Crear"} Detalle de Usuario</h1>
             <form onSubmit={handleSubmit} className="row g-3 justify-content-center">
                 <ul className="nav nav-tabs mb-4 justify-content-center" style={{ fontSize: "1.2rem" }}>
                     <li className="nav-item">

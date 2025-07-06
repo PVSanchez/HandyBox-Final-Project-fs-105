@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { getServiceById } from "../services/APIservice";
+import { CommentCard } from "../components/CommentCard";
+import { getRatesByServiceId } from "../services/APIrates";
+import { userService } from "../services/users";
+import { RateModal } from "../components/RateModal";
 
 export const ServiceDetail = () => {
 
@@ -8,11 +12,15 @@ export const ServiceDetail = () => {
 
     const { id } = useParams();
     const [service, setService] = useState([]);
+    const [rates, setRates] = useState([]);
     const [loading, setLoading] = useState(true)
     const [selectedMedia, setSelectedMedia] = useState([])
     const [quantity, setQuantity] = useState(1);
     const [total, setTotal] = useState(0);
     const navigate = useNavigate();
+    const [currentUser, setCurrentUser] = useState(null);
+    const [userHasPaidService, setUserHasPaidService] = useState(false);
+    const [stripeId, setStripeId] = useState("");
 
     useEffect(() => {
         const fetchService = async () => {
@@ -28,6 +36,65 @@ export const ServiceDetail = () => {
         };
         fetchService();
     }, [id]);
+
+    const fetchRates = async () => {
+        try {
+            const ratesData = await getRatesByServiceId(id);
+            setRates(ratesData);
+
+        } catch (error) {
+            console.error("Error al obtener las valoraciones:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchRates();
+    }, [id]);
+
+    useEffect(() => {
+        const checkUserAndPayment = async () => {
+            const userResponse = await userService.getCurrentUser();
+            if (userResponse.success) {
+                setCurrentUser(userResponse.data);
+                console.log(currentUser)
+
+                const backendUrl = import.meta.env.VITE_BACKEND_URL;
+                const token = sessionStorage.getItem('token');
+
+                try {
+                    const response = await fetch(`${backendUrl}api/stripe-pay/user`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const payments = await response.json();
+                    console.log("Pagos recibidos del backend:", payments);
+
+                    const hasPaid = payments.some(payment => {
+                        const serviceIds = payment.service_ids || [];
+
+                        console.log("Services id en el pago:", serviceIds);
+
+                        if (serviceIds.map(String).includes(String(id))) {
+                            console.log("Stripe ID encontrado:", payment.id);
+                            setStripeId(payment.id); // 💡 Aquí se guarda el ID correcto
+                            return true;
+                        }
+                        return false;
+                    });
+                    setUserHasPaidService(hasPaid);
+                } catch (error) {
+                    console.error('Error al comprobar pagos del usuario:', error);
+                }
+            }
+        };
+
+        checkUserAndPayment();
+    }, [id]);
+
+
     //Actualización dinámica del precio
     useEffect(() => {
         if (service.price) {
@@ -70,11 +137,12 @@ export const ServiceDetail = () => {
                 name: service.name,
                 price: service.price,
                 quantity: quantity,
-                image: service.img || "", // asegúrate que coincida con el campo usado en CheckoutForm
+                image: service.img || "",
             });
         }
 
         localStorage.setItem('cart', JSON.stringify(storedCart));
+        window.dispatchEvent(new Event('cartChanged'));
         navigate("/payment/:totalAmount/:currency");
     };
 
@@ -161,8 +229,22 @@ export const ServiceDetail = () => {
                                 </div>
                             )}
                         </div>
-                        <h3>Descripción</h3>
+                        <h3 className="my-3">Descripción</h3>
                         <p>{service.description} </p>
+                        <h3 className="my-3">Comentarios</h3>
+                        <CommentCard rates={rates} />
+                        {currentUser && userHasPaidService && (
+                            <div className="text-center my-3">
+                                <button
+                                    className="custom-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#rateModal"
+                                >
+                                    Dejar valoración
+                                </button>
+                            </div>
+                        )}
+
                     </div>
                     <div className="col-4">
                         <h5 className="card-title my-2">Servicio ofrecido por:</h5>
@@ -214,7 +296,7 @@ export const ServiceDetail = () => {
                                             aria-label="Cantidad de horas"
                                         />
                                         <span className="ms-3">
-                                            <span class="ms-1"> horas </span>
+                                            <span className="ms-1"> horas </span>
                                             = <span className="fw-bold">{total.toFixed(2)} €</span>
                                         </span>
                                     </div>
@@ -232,6 +314,13 @@ export const ServiceDetail = () => {
             <Link to="/services" className="custom-btn ms-2">
                 Volver a servicios
             </Link>
+            {/* Llama al modal */}
+            <RateModal
+                serviceId={id}
+                clientId={currentUser?.id}
+                stripeId={stripeId}
+                onSuccess={fetchRates}
+            />
         </div >
     )
 }
