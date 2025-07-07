@@ -18,6 +18,7 @@ class Service(db.Model):
     status: Mapped[bool] = mapped_column(Boolean, nullable=True, default=True)
 
     user = relationship("User")
+    ratings = relationship("Rate", back_populates="service", cascade="all, delete-orphan")
 
     def serialize(self):
         return{
