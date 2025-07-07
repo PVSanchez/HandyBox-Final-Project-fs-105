@@ -1,0 +1,107 @@
+:root {
+  --color-turquesa: #00d1b2;
+  --color-azul-profundo: #1f3a93;
+  --color-azul-claro: #3abeff;
+  --color-gris-fondo: #f4f4f4;
+}
+
+body {
+  background: var(--color-gris-fondo);
+}
+
+.custom-btn {
+  display: inline-block;
+  margin: 0.25rem;
+  background: linear-gradient(
+    90deg,
+    var(--color-turquesa) 0%,
+    var(--color-azul-claro) 100%
+  );
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+}
+.custom-btn:hover,
+.custom-btn:focus {
+  background: linear-gradient(
+    90deg,
+    var(--color-azul-profundo) 0%,
+    var(--color-turquesa) 100%
+  );
+  color: #fff;
+  outline: none;
+}
+.custom-btn:disabled {
+  background: #b0b0b0;
+  color: #f8f9fa;
+  cursor: not-allowed;
+}
+
+.custom-btn-1 {
+  display: inline-block;
+  margin: 0.25rem;
+  background: #fff;
+  color: var(--color-azul-profundo);
+  border: 2px solid var(--color-turquesa);
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+}
+.custom-btn-1:hover,
+.custom-btn-1:focus {
+  background: var(--color-turquesa);
+  color: #fff;
+  border: 2px solid var(--color-azul-profundo);
+}
+input[type="file"] {
+  background: transparent;
+  color: #fff;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+input[type="file"]::-webkit-file-upload-button {
+  background: linear-gradient(
+    90deg, var(--color-turquesa) 0%,
+    var(--color-azul-claro) 100%
+    );
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+input[type="file"]:hover::-webkit-file-upload-button {
+  background: linear-gradient(
+    90deg, var(--color-azul-profundo) 0%,
+    var(--color-turquesa) 100%
+    );
+}
+input[type="file"]::file-selector-button {
+  background: linear-gradient(
+    90deg, var(--color-turquesa) 0%,
+    var(--color-azul-claro) 100%
+    );
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+input[type="file"]:hover::file-selector-button {
+  background: linear-gradient(
+    90deg, var(--color-azul-profundo) 0%,
+    var(--color-turquesa) 100%
+    );
+}
+
+
