@@ -1,25 +1,26 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
+from extensions import socketio
+from api.routes.message import api as message_api
+from flask_jwt_extended import JWTManager
+from api.routes.userDetail import api as user_detail_api
+from api.routes.stripePay import api as stripe_pay_api
+from api.routes.serviceState import api as service_state_api
+from flask_cors import CORS
+from api.routes.stripe import api as payment_api
+from api.commands import setup_commands
+from api.admin import setup_admin
+from api.routes.service import api as service_api
+from api.routes.user import api as user_api
+from api.database.db import db
+from api.utils import APIException, generate_sitemap
+from flask_swagger import swagger
+from flask_migrate import Migrate
+from flask import Flask, request, jsonify, url_for, send_from_directory
 import os
 from dotenv import load_dotenv
 load_dotenv()
-from flask import Flask, request, jsonify, url_for, send_from_directory
-from flask_migrate import Migrate
-from flask_swagger import swagger
-from api.utils import APIException, generate_sitemap
-from api.database.db import db
-from api.routes.user import api as user_api
-from api.routes.service import api as service_api
-from api.admin import setup_admin
-from api.commands import setup_commands
-from api.routes.stripe import api as payment_api
-from flask_cors import CORS
-from api.routes.serviceState import api as service_state_api
-from api.routes.stripePay import api as stripe_pay_api
-from api.routes.userDetail import api as user_detail_api
-from flask_jwt_extended import JWTManager
-from flask_cors import CORS
 
 # from models import Person
 
@@ -35,12 +36,16 @@ app.register_blueprint(payment_api, url_prefix='/api/payment')
 app.register_blueprint(service_state_api, url_prefix='/api/service-state')
 app.register_blueprint(stripe_pay_api, url_prefix='/api/stripe-pay')
 app.register_blueprint(user_detail_api, url_prefix='/api/user-detail')
-    
+app.register_blueprint(message_api, url_prefix='/api/message')
+
+socketio.init_app(app)
+
 
 app.url_map.strict_slashes = False
 
 
-app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET_KEY', 'super-secret-key')
+app.config["JWT_SECRET_KEY"] = os.environ.get(
+    'JWT_SECRET_KEY', 'super-secret-key')
 jwt = JWTManager(app)
 
 # database condiguration
@@ -62,11 +67,15 @@ setup_admin(app)
 setup_commands(app)
 
 # Handle/serialize errors like a JSON object
+
+
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
 # generate sitemap with all your endpoints
+
+
 @app.route('/')
 def sitemap():
     if ENV == "development":
@@ -74,6 +83,8 @@ def sitemap():
     return send_from_directory(static_file_dir, 'index.html')
 
 # any other endpoint will try to serve it like a static file
+
+
 @app.route('/<path:path>', methods=['GET'])
 def serve_any_other_file(path):
     if not os.path.isfile(os.path.join(static_file_dir, path)):
