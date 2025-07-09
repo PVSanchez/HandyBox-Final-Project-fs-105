@@ -1,29 +1,18 @@
-<<<<<<< HEAD
-import { Link } from "react-router-dom";
-import React from "react";
-import "../style/Navbar.css";
-=======
-
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import "../style/Navbar.css";
-
-
 
 function getUserRole() {
 	try {
 		const user = JSON.parse(sessionStorage.getItem("user"));
 		if (user && user.rol && user.rol.type) {
-			return user.rol.type
+			return user.rol.type;
 		}
-		return null
+		return null;
 	} catch {
-		return null
+		return null;
 	}
 }
-
-
->>>>>>> d6af2b7a0566a30d647ccd2dbe01516154f58009
 
 export const Navbar = () => {
 	const [userRole, setUserRole] = React.useState(getUserRole())
@@ -101,21 +90,6 @@ export const Navbar = () => {
 	}
 
 	return (
-<<<<<<< HEAD
-		<nav className="navbar">
-			<div className="container justify-content-center">
-				<div className="dropdown">
-					<button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-						Páginas
-					</button>
-					<ul className="dropdown-menu justify-content-center" aria-labelledby="dropdownMenuButton">
-						<li><Link className="dropdown-item justify-content-center" to="/">Home</Link></li>
-						<li><Link className="dropdown-item justify-content-center" to="/login">Login</Link></li>
-						<li><Link className="dropdown-item justify-content-center" to="/signup">Signup</Link></li>
-						<li><Link className="dropdown-item justify-content-center" to="/modifyuser">Modificar Usuario</Link></li>
-						<li><Link className="dropdown-item justify-content-center" to="/services">Servicios</Link></li>
-					</ul>
-=======
 		<nav className="navbar navbar-responsive d-flex justify-content-between align-items-center px-3">
 			<div className="navbar-left">
 				<Link to="/" className="navbar-logo navbar-logo-flex">
@@ -162,7 +136,6 @@ export const Navbar = () => {
 							))}
 						</ul>
 					)}
->>>>>>> d6af2b7a0566a30d647ccd2dbe01516154f58009
 				</div>
 			</div>
 		</nav>
