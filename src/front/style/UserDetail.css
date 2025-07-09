@@ -1,0 +1,44 @@
+.userdetail-modal-bg {
+  display: block;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.userdetail-modal-video {
+  width: 100%;
+  max-width: 900px;
+  max-height: 80vh;
+  border-radius: 18px;
+  background: #000;
+  display: block;
+}
+.userdetail-container {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.userdetail-pointer {
+  cursor: pointer;
+}
+
+.userdetail-border {
+  border: 3px solid #2196f3;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+.userdetail-img {
+  object-fit: cover;
+  width: 144px;
+  height: 144px;
+  border-radius: 50%;
+}

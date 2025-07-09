@@ -1,4 +1,40 @@
 :root {
+<<<<<<< HEAD
+  --primary-color: #00D1B2;
+  --accent-blue: #3ABEFF;
+  --deep-blue: #1F3A93;
+  --light-bg: #F4F4F4;
+}
+body {
+  background-color: var(--light-bg);
+  color: var(--deep-blue);
+}
+.navbar {
+  background-color: var(--deep-blue);
+}
+
+.navbar .navbar-brand,
+.navbar .dropdown-toggle,
+.navbar .dropdown-menu .dropdown-item {
+  color: #fff;
+}
+
+.navbar .dropdown-toggle {
+  background-color: var(--primary-color);
+  border: none;
+  width: 160px;
+}
+
+.navbar .dropdown-menu {
+  background-color: var(--accent-blue);
+  text-align: center;
+}
+
+.navbar .dropdown-menu .dropdown-item:hover {
+  background-color: var(--primary-color);
+  color: #fff 
+}
+=======
   --primary-color: #00d1b2;
   --accent-blue: #3abeff;
   --deep-blue: #1f3a93;
@@ -175,3 +211,4 @@
     top: 42px;
   }
 }
+>>>>>>> d6af2b7a0566a30d647ccd2dbe01516154f58009

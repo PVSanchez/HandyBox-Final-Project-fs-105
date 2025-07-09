@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { Spinner } from "../components/Spinner";
+import "../style/UserDetail.css";
 
 const URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -65,14 +66,14 @@ export const UserDetail = () => {
   return (
     <>
       {showVideoModal && detail.video && (
-        <div className="modal fade show" style={{ display: 'block', background: 'rgba(0,0,0,0.85)' }} tabIndex="-1" onClick={() => setShowVideoModal(false)}>
+        <div className="modal fade show userdetail-modal-bg" tabIndex="-1" onClick={() => setShowVideoModal(false)}>
           <div className="modal-dialog modal-xl modal-dialog-centered" onClick={e => e.stopPropagation()}>
             <div className="modal-content bg-dark border-0">
               <div className="modal-header border-0">
                 <button type="button" className="btn-close btn-close-white ms-auto" aria-label="Close" onClick={() => setShowVideoModal(false)}></button>
               </div>
               <div className="modal-body d-flex justify-content-center">
-                <video src={detail.video} controls autoPlay style={{ width: '100%', maxWidth: '900px', maxHeight: '80vh', borderRadius: 18, background: '#000' }} />
+                <video src={detail.video} controls autoPlay className="userdetail-modal-video" />
               </div>
             </div>
           </div>
@@ -105,36 +106,42 @@ export const UserDetail = () => {
           </div>
         </nav>
       )}
-      <div className="container mt-5">
+      <div className="container mt-5 mb-5">
         <div className="row justify-content-center">
           <div className="col-lg-8 col-md-10 col-12 p-4 rounded shadow-lg bg-white">
             <div className="d-flex align-items-center mb-4">
               <div
                 onMouseEnter={() => setHover(true)}
                 onMouseLeave={() => setHover(false)}
-                style={{ width: 150, height: 150, position: "relative", cursor: detail.video ? 'pointer' : 'default' }}
+                className={`userdetail-container${detail.video ? ' userdetail-hasvideo' : ''}${detail.video ? ' userdetail-pointer' : ''}`}
                 onClick={() => detail.video && setShowVideoModal(true)}
               >
                 {hover && detail.video ? (
-                  <video
-                    src={detail.video}
-                    width={150}
-                    height={150}
-                    className="rounded-circle border border-2"
-                    style={{ objectFit: "cover" }}
-                    autoPlay
-                    muted
-                    loop
-                  />
+                  <div className="userdetail-border">
+                    <video
+                      src={detail.video}
+                      className="rounded-circle userdetail-img"
+                      autoPlay
+                      muted
+                      loop
+                    />
+                  </div>
                 ) : (
-                  <img
-                    src={detail.user?.img || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
-                    alt="avatar"
-                    className="rounded-circle border border-2"
-                    width={150}
-                    height={150}
-                    style={{ objectFit: "cover" }}
-                  />
+                  detail.video ? (
+                    <div className="userdetail-border">
+                      <img
+                        src={detail.user?.img || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+                        alt="avatar"
+                        className="rounded-circle userdetail-img"
+                      />
+                    </div>
+                  ) : (
+                    <img
+                      src={detail.user?.img || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+                      alt="avatar"
+                      className="rounded-circle border border-2 userdetail-img"
+                    />
+                  )
                 )}
               </div>
               <div className="ms-4">
