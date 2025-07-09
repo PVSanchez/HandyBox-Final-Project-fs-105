@@ -8,8 +8,6 @@ import {
 } from "react-router-dom";
 import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
-import { Single } from "./pages/Single";
-import { Demo } from "./pages/Demo";
 import { Signup } from "./pages/Signup";
 import { Login } from "./pages/Login";
 import { ModifyUser } from "./pages/ModifyUser";
@@ -41,7 +39,6 @@ export const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/modifyUser" element={<ModifyUser />} />
       <Route path="/services" element={<Services />} />
-      {/* <Route path="/carrito" element={<Carrito />} /> */}
       <Route path="/payment/:totalAmount/:currency" element={<PaymentPage />} />
       <Route path="/resumen" element={<ResumenCompra />} />
       <Route path="/createService" element={<CreateService />} />

@@ -24,7 +24,7 @@ export const Services = () => {
   }, []);
 
   return (
-    <div className="container text-center mt-5">
+    <div className="container text-center mt-5 mb-5">
       <h1 className="display-3 fw-bold">Página de servicios</h1>
       {services.length > 0 ? (
         <CardService

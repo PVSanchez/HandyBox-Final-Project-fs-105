@@ -1,23 +1,18 @@
-
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import "../style/Navbar.css";
-
-
 
 function getUserRole() {
 	try {
 		const user = JSON.parse(sessionStorage.getItem("user"));
 		if (user && user.rol && user.rol.type) {
-			return user.rol.type
+			return user.rol.type;
 		}
-		return null
+		return null;
 	} catch {
-		return null
+		return null;
 	}
 }
-
-
 
 export const Navbar = () => {
 	const [userRole, setUserRole] = React.useState(getUserRole())

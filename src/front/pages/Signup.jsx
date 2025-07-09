@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { userService } from '../services/users'
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "../components/Spinner";
+import '../style/Signup.css'
 
 const INITIAL_STATE = {
     email: '',
@@ -111,7 +112,7 @@ export const Signup = () => {
     }
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-5 mb-5">
             <div className="row justify-content-center">
                 <div className="col-md-6">
                     <div className="card">

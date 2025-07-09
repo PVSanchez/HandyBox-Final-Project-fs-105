@@ -1,0 +1,28 @@
+
+.comment-user-img {
+  height: 60px;
+  width: 60px;
+  object-fit: cover;
+}
+@media (max-width: 767.98px) {
+  .comment-user-img {
+    height: 45px;
+    width: 45px;
+  }
+}
+@media (max-width: 575.98px) {
+  .comment-user-img {
+    height: 35px;
+    width: 35px;
+  }
+}
+
+/* Estrellas de valoración */
+.comment-star {
+  font-size: 1.2rem;
+  color: #e4e5e9;
+  transition: color 0.2s;
+}
+.comment-star.filled {
+  color: #ffc107;
+}
