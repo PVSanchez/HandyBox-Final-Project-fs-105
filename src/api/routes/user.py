@@ -177,6 +177,19 @@ def update_user():
                     if not validate_email(body['email']):
                         return jsonify({'error': 'Formato de email inválido'}), 400
                     user.email = body['email']
+                elif field == 'img':
+                    img_value = body['img']
+                    
+                    if img_value.startswith('data:image'):
+                        try:
+                            upload_result = cloudinary.uploader.upload(img_value, folder="handybox_users")
+                            img_url = upload_result.get('secure_url')
+                            user.img = img_url
+                        except Exception as img_exc:
+                            print('ERROR SUBIENDO IMAGEN A CLOUDINARY:', img_exc)
+                          
+                    else:
+                        user.img = img_value
                 else:
                     setattr(user, field, body[field])
         db.session.commit()

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createService } from "../services/APIservice";
+import { Spinner } from "../components/Spinner";
 
 const INITIAL_STATE = {
     name: '',
@@ -75,14 +76,14 @@ export const CreateService = () => {
         <div className="container mt-5">
             {loading ? (
                 <div className="d-flex align-items-center justify-content-center flex-column">
-                    <div className="spinner-border text-primary" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
+                    
+                        <Spinner />
+                    
                     <span className="text-primary">Subiendo contenido...</span>
                 </div>
             ) : (
                 <>
-                    <div className="row justify-content-center">
+                    <div className="row justify-content-center mb-5">
                         <div className="col-md-8">
                             <div className="card">
                                 <div className="card-body">
