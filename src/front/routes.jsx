@@ -21,6 +21,8 @@ import { ProfessionalServices } from "./pages/ProfessionalServices";
 import { UserDetail } from "./pages/UserDetail";
 import { ServiceDetail  } from "./pages/ServiceDetail";
 import { CreateUserDetail } from "./pages/CreateUserDetail";
+import { ResetPassword } from "./pages/ResetPassword";
+import { ForgotPassword } from "./pages/ForgotPassword";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,6 +49,8 @@ export const router = createBrowserRouter(
       <Route path="/professional-services" element={<ProfessionalServices />} />
       <Route path="/service/:id" element={<ServiceDetail />} />
       <Route path="/create-user-detail" element={<CreateUserDetail />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
     </Route>
   )
 );

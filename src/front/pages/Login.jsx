@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { userService } from '../services/users';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Spinner } from "../components/Spinner";
 
 export const Login = () => {
@@ -69,6 +69,7 @@ export const Login = () => {
                                 />
                             </div>
                             <button type="submit" className="custom-btn w-100">Login</button>
+                            <Link className="small" to="/forgot-password">¿Has olvidado la contraseña?</Link>
                         </form>
                     )}
                 </div>
