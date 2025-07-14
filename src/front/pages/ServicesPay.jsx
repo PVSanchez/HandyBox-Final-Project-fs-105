@@ -42,8 +42,8 @@ export const ServicesPay = () => {
   const getServiceById = (id) => services.find(s => String(s.id) === String(id))
 
   return (
-    <div className="services-pay-container">
-      <h1 className="text-center display-3 fw-bold">Resumen de Servicios Contratados</h1>
+    <div className="container services-pay-container">
+      <h1 className="text-center display-3 fw-bold mt-5 mb-4">Resumen de Servicios Contratados</h1>
       <div className="payments-list row justify-content-center g-4">
         {contracts.map((contract, idx) => {
           const service = getServiceById(contract.service_id)

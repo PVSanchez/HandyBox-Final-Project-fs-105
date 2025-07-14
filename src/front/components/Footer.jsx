@@ -1,5 +1,4 @@
 import React from "react";
-
 export const Footer = () => (
 	<footer className="footer mt-auto py-3 bg-dark text-light text-center">
 		<div className="container">

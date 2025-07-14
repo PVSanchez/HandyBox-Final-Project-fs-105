@@ -7,6 +7,7 @@ import { userService } from "../services/users";
 import { RateModal } from "../components/RateModal";
 import Message from "../components/Message";
 import '../style/ServiceDetail.css';
+import { Spinner } from "../components/Spinner";
 
 export const ServiceDetail = () => {
 
@@ -152,14 +153,17 @@ export const ServiceDetail = () => {
     return (
         <div className="container">
             {loading ? (
-                <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </div>) : (
-                <>
-                    <div className="row">
-                        <div className="col-12 col-md-8">
-                            <h3 className="my-3">{service.name}</h3>
-                            <div className="d-flex">
+                <div className="d-flex justify-content-center mt-5">
+                    <div className="align-self-center">
+                        <Spinner />
+                    </div>
+                </div>
+            ) : (
+                <div className="row">
+                    <div className="col-12 col-md-8">
+                        <h3 className="my-4">{service.name}</h3>
+                        <div className="d-flex justify-content-center">
+                            <div className="media-container mx-auto">
                                 {renderMainMedia()}
                             </div>
                             <div className="d-flex justify-content-center gap-2 my-3">
@@ -341,7 +345,7 @@ export const ServiceDetail = () => {
                     )}
                 </>
             )}
-            <Link to="/services" className="custom-btn ms-2">
+            <Link to="/services" className="custom-btn ms-2 my-4">
                 Volver a servicios
             </Link>
             {/* Llama al modal */}

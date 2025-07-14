@@ -27,7 +27,6 @@ def validate_email(email):
     pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
     return re.match(pattern, email) is not None
 
-
 def validate_password(password):
     if len(password) < 8:
         return False
@@ -39,13 +38,11 @@ def validate_password(password):
         return False
     return True
 
-
 def get_rol_id_by_type(rol_type):
     rol = Rol.query.filter_by(type=rol_type).first()
     if rol:
         return rol.id
     return None
-
 
 @api.route('/', methods=['GET'])
 def get_users():
@@ -189,7 +186,6 @@ def update_user():
                             user.img = img_url
                         except Exception as img_exc:
                             print('ERROR SUBIENDO IMAGEN A CLOUDINARY:', img_exc)
-
                     else:
                         user.img = img_value
                 else:

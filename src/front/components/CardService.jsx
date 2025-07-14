@@ -33,11 +33,11 @@ export const CardService = ({ services, rates }) => {
                         : null;
 
                 return (
-                    <div key={service.id} className="card" style={{ width: "300px" }}>
+                    <div key={service.id} className="card m-3" style={{ width: "350px" }}>
                         <img src={service.img || "https://placeholder.pics/svg/300x200"}
                             className="card-img-top"
                             alt={service.name}
-                            style={{ width: "300px", height: "200px", objectFit: "cover" }} />
+                            style={{ width: "350px", height: "200px", objectFit: "cover" }} />
 
                         <div className="card-body">
                             <h5 className="card-title">{service.name}</h5>
@@ -61,7 +61,13 @@ export const CardService = ({ services, rates }) => {
                                         </span>
                                     </div>
                                 ) : (
-                                    <p></p>
+                                    <span
+                                        style={{
+                                            fontSize: "1.3rem",
+                                            color: "#e4e5e9"
+                                        }}>
+                                        ★★★★★
+                                    </span>
                                 )}
                             </div>
 
