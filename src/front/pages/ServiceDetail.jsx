@@ -6,6 +6,7 @@ import { getRatesByServiceId } from "../services/APIrates";
 import { userService } from "../services/users";
 import { RateModal } from "../components/RateModal";
 import '../style/ServiceDetail.css';
+import { Spinner } from "../components/Spinner";
 
 export const ServiceDetail = () => {
 
@@ -149,12 +150,15 @@ export const ServiceDetail = () => {
     return (
         <div className="container">
             {loading ? (
-                <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </div>) : (
+                <div className="d-flex justify-content-center mt-5">
+                    <div className="align-self-center">
+                        <Spinner />
+                    </div>
+                </div>
+            ) : (
                 <div className="row">
                     <div className="col-12 col-md-8">
-                        <h3 className="my-3">{service.name}</h3>
+                        <h3 className="my-4">{service.name}</h3>
                         <div className="d-flex justify-content-center">
                             <div className="media-container mx-auto">
                                 {renderMainMedia()}
@@ -195,9 +199,9 @@ export const ServiceDetail = () => {
                                 </div>
                             )}
                         </div>
-                        <h3 className="my-3">Descripción</h3>
+                        <h3 className="my-4">Descripción</h3>
                         <p>{service.description} </p>
-                        <h3 className="my-3">Comentarios</h3>
+                        <h3 className="my-4">Comentarios</h3>
                         <div className="comment-container mx-auto">
                             <CommentCard rates={rates} />
                         </div>
@@ -214,7 +218,7 @@ export const ServiceDetail = () => {
                         )}
                     </div>
                     <div className="col-12 col-md-4 mt-4 mt-md-0">
-                        <h5 className="card-title my-2">Servicio ofrecido por:</h5>
+                        <h5 className="card-title my-4">Servicio ofrecido por:</h5>
                         <div className="d-flex justify-content-center">
                             <Link to={`/user-detail?id=${service.user_id}`} className="w-100 text-decoration-none text-reset">
                                 <div className="card text-center align-items-center w-100 h-100">
@@ -282,7 +286,7 @@ export const ServiceDetail = () => {
                     </div>
                 </div>
             )}
-            <Link to="/services" className="custom-btn ms-2">
+            <Link to="/services" className="custom-btn ms-2 my-4">
                 Volver a servicios
             </Link>
             {/* Llama al modal */}

@@ -114,7 +114,7 @@ export const CreateUserDetail = () => {
     return (
         <div className="container mt-4">
             <h1 className="mb-4 text-center display-3 fw-bold">{isEdit ? "Actualizar" : "Crear"} Detalle de Usuario</h1>
-            <form onSubmit={handleSubmit} className="row g-3 justify-content-center">
+            <form onSubmit={handleSubmit} className="row g-3 justify-content-center mb-5">
                 <ul className="nav nav-tabs mb-4 justify-content-center" style={{ fontSize: "1.2rem" }}>
                     <li className="nav-item">
                         <button type="button" className={`nav-link${tab === 0 ? ' active' : ''}`} onClick={() => setTab(0)} style={{ minWidth: 180 }}>Acerca de mí</button>

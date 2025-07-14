@@ -31,7 +31,7 @@ export const CommentCard = ({ rates }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="card-body px-0 py-3">
+                    <div className="card-body p-3">
                         <p className="card-text text-muted mb-0">{rate.comment}</p>
                     </div>
                 </div>

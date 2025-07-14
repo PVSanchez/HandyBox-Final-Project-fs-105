@@ -24,7 +24,7 @@ export const ForgotPassword = () => {
     };
 
     return (
-        <div className="container py-4">
+        <div className="container m-auto">
             <div className="row justify-content-center">
                 <div className="col-md-6">
                     <form onSubmit={handleSubmit}>
@@ -50,7 +50,7 @@ export const ForgotPassword = () => {
                             {loading ? "Enviando..." : "Enviar"}
                         </button>
 
-                        <div className="mt-3 text-center">
+                        <div className="mt-3">
                             <Link to="/login">Volver al Login</Link>
                         </div>
                     </form>

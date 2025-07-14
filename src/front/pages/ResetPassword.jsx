@@ -41,7 +41,7 @@ export const ResetPassword = () => {
     };
 
     return (
-        <div className="container py-4">
+        <div className="container m-auto">
             <div className="row justify-content-center">
                 <div className="col-md-6">
                     <form onSubmit={handleSubmit}>

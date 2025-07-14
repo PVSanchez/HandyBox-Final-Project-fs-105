@@ -189,7 +189,6 @@ def update_user():
                             user.img = img_url
                         except Exception as img_exc:
                             print('ERROR SUBIENDO IMAGEN A CLOUDINARY:', img_exc)
-
                     else:
                         user.img = img_value
                 else:
