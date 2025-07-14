@@ -157,7 +157,7 @@ export const ServiceDetail = () => {
                 </div>) : (
                 <>
                     <div className="row">
-                        <div className="col-8">
+                        <div className="col-12 col-md-8">
                             <h3 className="my-3">{service.name}</h3>
                             <div className="d-flex">
                                 {renderMainMedia()}
@@ -234,7 +234,9 @@ export const ServiceDetail = () => {
                             <h3 className="my-3">Descripción</h3>
                             <p>{service.description} </p>
                             <h3 className="my-3">Comentarios</h3>
-                            <CommentCard rates={rates} />
+                            <div className="comment-list">
+                                <CommentCard rates={rates} alignLeft={true} />
+                            </div>
                             {currentUser && userHasPaidService && (
                                 <div className="text-center my-3">
                                     <button
@@ -247,42 +249,42 @@ export const ServiceDetail = () => {
                                 </div>
                             )}
                         </div>
-                        <div className="col-4">
+                        <div className="col-12 col-md-4">
                             <h5 className="card-title my-2">Servicio ofrecido por:</h5>
-                            <div className="d-flex justify-content-center">
-                                <Link to={`/user-detail?id=${service.user_id}`} style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}>
-                                    <div className="card text-center align-items-center" style={{ width: "100%" }}>
+                            <div className="d-flex justify-content-center mb-3">
+                                <Link to={`/user-detail?id=${service.user_id}`} className="w-100" style={{ textDecoration: 'none', color: 'inherit' }}>
+                                    <div className="card text-center align-items-center w-100 mb-3">
                                         <img
                                             src={service.user.img || defaultImg}
-                                            className="card-img-top mt-3"
+                                            className="card-img-top mt-3 img-fluid"
                                             alt={`Foto de ${service.user.user_name}`}
-                                            style={{ width: "150px", borderRadius: "50%" }}
+                                            style={{ borderRadius: "50%", maxWidth: "150px", width: "100%", height: "auto" }}
                                         />
                                         <div className="card-body">
                                             <ul className="list-group list-group-flush mb-3">
-                                                <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>
+                                                <li className="list-group-item py-3 px-2 text-primary fw-semibold">
                                                     Nombre: <span className="fw-bold text-decoration-underline">{service.user.first_name}</span>
                                                 </li>
-                                                <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>Apellidos: {service.user.last_name}</li>
-                                                <li className="list-group-item py-3 px-2" style={{ color: '#1F3A93', fontWeight: '500' }}>Email: {service.user.email}</li>
+                                                <li className="list-group-item py-3 px-2 text-primary fw-semibold">Apellidos: {service.user.last_name}</li>
+                                                <li className="list-group-item py-3 px-2 text-primary fw-semibold">Email: {service.user.email}</li>
                                             </ul>
                                         </div>
                                     </div>
                                 </Link>
                             </div>
-                            <div className="card card-body mt-3">
+                            <div className="card card-body w-100 mb-3">
                                 <h4 className="mb-3">Servicio a pagar</h4>
                                 <ul className="list-group mb-3">
-                                    <div className="d-flex flex-column align-items-center align-items-md-start">
+                                    <div className="d-flex flex-column align-items-center align-items-md-start w-100">
                                         <div className="d-flex flex-column flex-md-row align-items-center w-100 mb-2 position-relative">
                                             {service.image && (
-                                                <img src={service.image} alt={service.name} className="img-thumbnail me-md-3 mb-2 mb-md-0" style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '6px' }} />
+                                                <img src={service.image} alt={service.name} className="img-thumbnail me-md-3 mb-2 mb-md-0 img-fluid" style={{ maxWidth: '60px', borderRadius: '6px' }} />
                                             )}
                                             <div className="d-flex align-items-center w-100 justify-content-between">
-                                                <div style={{ fontWeight: 500, fontSize: '1.08rem' }}>{service.name}</div>
+                                                <div className="fw-semibold" style={{ fontSize: '1.08rem' }}>{service.name}</div>
                                             </div>
                                         </div>
-                                        <div className="d-flex align-items-center flex-wrap w-100 justify-content-center justify-content-md-start" style={{ fontSize: '0.97rem' }}>
+                                        <div className="d-flex align-items-center flex-wrap w-100 justify-content-center justify-content-md-start">
                                             <span className="me-1">Precio:</span>
                                             <span className="fw-bold">{service.price} €</span>
                                             <span className="mx-2">x</span>
@@ -309,21 +311,29 @@ export const ServiceDetail = () => {
                             </div>
                         </div>
                     </div>
-                    {currentUser && (
-                        <Message
-                            show={showChat}
-                            serviceId={id}
-                            professionalId={service.user_id}
-                            userId={currentUser.id}
-                            userName={currentUser.user_name}
-                            roomUserId={currentUser.id}
-                            roomUserName={currentUser.user_name}
-                        />
+                    {currentUser && showChat && (
+                        <div className="chat-modal-overlay">
+                            <div className="chat-modal-container">
+                                <Message
+                                    show={true}
+                                    serviceId={id}
+                                    professionalId={service.user_id}
+                                    userId={currentUser.id}
+                                    userName={currentUser.user_name}
+                                    roomUserId={currentUser.id}
+                                    roomUserName={currentUser.user_name}
+                                />
+                                <button
+                                    className="chat-modal-close"
+                                    onClick={() => setShowChat(false)}
+                                    aria-label="Cerrar chat"
+                                >&times;</button>
+                            </div>
+                        </div>
                     )}
-                    {currentUser && (
+                    {currentUser && !showChat && (
                         <button
                             className="floating-chat-btn"
-                            style={{ position: 'fixed', bottom: 30, right: 30, zIndex: 1050 }}
                             onClick={() => setShowChat(true)}
                         >
                             <span role="img" aria-label="chat">💬</span>

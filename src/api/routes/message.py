@@ -117,8 +117,8 @@ def handle_join_room(data):
 @socketio.on('send_message')
 def handle_send_message(data):
     service_id = data.get('service_id')
-    user_id = data.get('user_id')  # sala (cliente)
-    sender_id = data.get('sender_id')  # remitente real
+    user_id = data.get('user_id')  
+    sender_id = data.get('sender_id') 
     sender_role = data.get('sender_role')
     text = data.get('text') or data.get('content')
     professional_id = data.get('professional_id')
@@ -148,12 +148,12 @@ def handle_send_message(data):
 @jwt_required()
 def get_services_with_messages(user_id):
     try:
-        # Obtener el rol del usuario logueado
+       
         user = User.query.get(user_id)
         user_role = user.rol.type.value if user and user.rol else None
         result = []
         if user_role == "professional":
-            # Servicios donde el profesional tiene clientes con mensajes
+            
             service_ids = db.session.query(Message.service_id).filter(
                 Message.service_id.in_(
                     db.session.query(Service.id).filter(
@@ -165,7 +165,7 @@ def get_services_with_messages(user_id):
             services = Service.query.filter(Service.id.in_(service_ids)).all()
             for service in services:
                 service_dict = service.serialize()
-                # Clientes con mensajes en este servicio
+              
                 client_ids = db.session.query(Message.sender_id).filter(
                     Message.service_id == service.id,
                     Message.sender_id != service.user_id
@@ -178,11 +178,11 @@ def get_services_with_messages(user_id):
                         clients.append(
                             {"id": user_client.id, "name": user_client.user_name})
                 service_dict["clients"] = clients
-                # Solo incluir servicios con clientes activos
+             
                 if clients:
                     result.append(service_dict)
         else:
-            # Servicios donde el cliente ha enviado mensajes
+       
             service_ids = db.session.query(Message.service_id).filter(
                 Message.sender_id == user_id
             ).distinct().all()
@@ -190,7 +190,7 @@ def get_services_with_messages(user_id):
             services = Service.query.filter(Service.id.in_(service_ids)).all()
             for service in services:
                 service_dict = service.serialize()
-                # Buscar el cliente actual
+              
                 user_client = User.query.get(user_id)
                 service_dict["clients"] = [
                     {"id": user_client.id, "name": user_client.user_name}] if user_client else []

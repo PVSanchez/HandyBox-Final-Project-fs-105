@@ -22,7 +22,7 @@ const Message = ({ show, serviceId, professionalId, userId, userName, roomUserId
             socketRef.current.disconnect()
         }
 
-        console.log("Probando conexión socket.io a:", SOCKET_URL)
+        console.log("Probando conexión socket.io a:", SOCKET_URL);
         socketRef.current = io(SOCKET_URL, {
             transports: ["websocket"],
             auth: {
@@ -31,10 +31,10 @@ const Message = ({ show, serviceId, professionalId, userId, userName, roomUserId
             reconnection: true,
             reconnectionAttempts: 5,
             timeout: 2000,
-        })
+        });
         socketRef.current.on("connect", () => {
-            console.log("Conexión socket.io exitosa")
-        })
+            console.log("Conexión socket.io exitosa");
+        });
         socketRef.current.on("disconnect", (reason) => {
             console.warn("Socket desconectado:", reason)
         })
@@ -82,12 +82,12 @@ const Message = ({ show, serviceId, professionalId, userId, userName, roomUserId
                 user: senderName,
                 user_name: senderName,
                 sender_name: senderName,
-                content: input, 
+                content: input,
                 service_id: serviceId,
                 professional_id: professionalId,
-                user_id: senderId, 
-                sender_id: senderId, 
-                room_user_id: roomUserId 
+                user_id: senderId,
+                sender_id: senderId,
+                room_user_id: roomUserId
             };
             if (socketRef.current && socketRef.current.connected) {
                 socketRef.current.emit("send_message", msgObj);
@@ -101,57 +101,53 @@ const Message = ({ show, serviceId, professionalId, userId, userName, roomUserId
     const [open, setOpen] = useState(show)
     useEffect(() => { setOpen(show); }, [show])
 
-    return (
-        <>
-            <button className="floating-chat-btn" style={{ display: open ? 'none' : 'flex' }} onClick={() => setOpen(true)} title="Abrir chat">
-                <span role="img" aria-label="chat">💬</span>
-            </button>
-            <div className="floating-chat-box" style={{ display: open ? 'flex' : 'none' }}>
-                <div className="floating-chat-header">
-                    <span>Chat</span>
-                    <button onClick={() => setOpen(false)} style={{ background: 'none', border: 'none', color: 'white', fontSize: '1.3rem', cursor: 'pointer' }}>&times;</button>
-                </div>
-                <div className="floating-chat-body">
-                    {messages && messages.length > 0 ? (
-                        messages.map((msg, idx) => {
-                            let displayName = msg.sender_name || msg.user_name || msg.user || "Sin nombre";
-                            const isOwnMessage = msg.sender_id == userId;
+    if (!show) return null;
 
-                            return (
-                                <div
-                                    key={msg.id || idx}
-                                    className={`mb-2 message-bubble ${isOwnMessage ? 'own-message' : 'received-message'}`}
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: isOwnMessage ? 'flex-end' : 'flex-start',
-                                    }}
-                                >
-                                    <strong>{displayName}:</strong> {msg.content}
-                                </div>
-                            );
-                        })
-                    ) : (
-                        <div className="text-muted">No hay mensajes aún.</div>
-                    )}
-                    <div ref={messagesEndRef} />
-                </div>
-                <div className="floating-chat-footer">
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={input}
-                        onChange={event => setInput(event.target.value)}
-                        onKeyDown={event => event.key === 'Enter' && handleSend()}
-                        placeholder="Escribe un mensaje..."
-                        style={{ flex: 1 }}
-                    />
-                    <button type="button" className="btn btn-primary" onClick={handleSend}>
-                        Enviar
-                    </button>
-                </div>
+    return (
+        <div className="chat-modal-content">
+            <div className="floating-chat-header">
+                <span>Chat</span>
             </div>
-        </>
+            <div className="floating-chat-body">
+                {messages && messages.length > 0 ? (
+                    messages.map((msg, idx) => {
+                        let displayName = msg.sender_name || msg.user_name || msg.user || "Sin nombre";
+                        const isOwnMessage = msg.sender_id == userId;
+
+                        return (
+                            <div
+                                key={msg.id || idx}
+                                className={`mb-2 message-bubble ${isOwnMessage ? 'own-message' : 'received-message'}`}
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: isOwnMessage ? 'flex-end' : 'flex-start',
+                                }}
+                            >
+                                <strong>{displayName}:</strong> {msg.content}
+                            </div>
+                        );
+                    })
+                ) : (
+                    <div className="text-muted">No hay mensajes aún.</div>
+                )}
+                <div ref={messagesEndRef} />
+            </div>
+            <div className="floating-chat-footer">
+                <input
+                    type="text"
+                    className="form-control"
+                    value={input}
+                    onChange={event => setInput(event.target.value)}
+                    onKeyDown={event => event.key === 'Enter' && handleSend()}
+                    placeholder="Escribe un mensaje..."
+                    style={{ flex: 1 }}
+                />
+                <button type="button" className="btn btn-primary" onClick={handleSend}>
+                    Enviar
+                </button>
+            </div>
+        </div>
     );
 };
 
@@ -159,9 +155,9 @@ Message.propTypes = {
     show: PropTypes.bool.isRequired,
     serviceId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     professionalId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, 
-    userName: PropTypes.string.isRequired, 
-    roomUserId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired, 
+    userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    userName: PropTypes.string.isRequired,
+    roomUserId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     roomUserName: PropTypes.string
 }
 
