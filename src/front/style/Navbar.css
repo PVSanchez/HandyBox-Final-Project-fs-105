@@ -8,7 +8,6 @@
 .navbar-responsive {
   background: var(--deep-blue);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
-  border-radius: 0 0 12px 12px;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -174,4 +173,8 @@
     min-width: 140px;
     top: 42px;
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4502bf3d4d761ffe66a4e1f68029094ec9c3bd74
