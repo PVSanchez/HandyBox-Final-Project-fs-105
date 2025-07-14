@@ -49,6 +49,15 @@ const LoginUser = async (body) => {
       if (data.token) {
         sessionStorage.setItem("token", data.token);
         sessionStorage.setItem("user", JSON.stringify(data.user));
+        if (data.user.id) {
+          sessionStorage.setItem("user_id", data.user.id);
+        }
+        if (data.user.rol && data.user.rol.type) {
+          sessionStorage.setItem("rol", data.user.rol.type);
+        }
+        if (data.user.user_name) {
+          sessionStorage.setItem("user_name", data.user.user_name);
+        }
         window.dispatchEvent(new Event("userChanged"));
       }
       return { success: true, data };

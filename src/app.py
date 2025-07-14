@@ -1,6 +1,7 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
+from api.routes.rate import api as rate_api
 from extensions import socketio
 from api.routes.message import api as message_api
 from flask_jwt_extended import JWTManager
@@ -21,24 +22,7 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 import os
 from dotenv import load_dotenv
 load_dotenv()
-from flask import Flask, request, jsonify, url_for, send_from_directory
-from flask_migrate import Migrate
-from flask_swagger import swagger
-from api.utils import APIException, generate_sitemap
-from api.database.db import db
-from api.routes.user import api as user_api
-from api.routes.service import api as service_api
-from api.admin import setup_admin
-from api.commands import setup_commands
-from api.routes.stripe import api as payment_api
-from flask_cors import CORS
-from api.routes.serviceState import api as service_state_api
-from api.routes.stripePay import api as stripe_pay_api
-from api.routes.rate import api as rate_api 
 
-from api.routes.userDetail import api as user_detail_api
-from flask_jwt_extended import JWTManager
-from flask_cors import CORS
 
 # from models import Person
 
@@ -115,5 +99,7 @@ def serve_any_other_file(path):
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
+    import eventlet
+    import eventlet.wsgi
     PORT = int(os.environ.get('PORT', 3001))
-    app.run(host='0.0.0.0', port=PORT, debug=True)
+    socketio.run(app, host='0.0.0.0', port=PORT, debug=True)
