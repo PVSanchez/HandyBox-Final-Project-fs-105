@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
-
+import "../styles/chat.css";
 
 
 const SOCKET_URL = import.meta.env.VITE_BACKEND_URL;
@@ -142,56 +142,56 @@ const Chat = () => {
             <ul className="chat-list">
                 {chats.length === 0 && !loading ? <li>No tienes chats.</li> : null}
                 {chats.map(chat => (
-                    <li key={chat.id}>
-                        <button onClick={() => setSelectedChat(chat)}>
-                            Chat de servicio: {chat.service_name || chat.id}
+                    <li key={chat.id} className="chat-list-item">
+                        <button
+                            className="chat-list-btn btn btn-outline-primary w-100 mb-2"
+                            onClick={() => setSelectedChat(chat)}
+                        >
+                            <span className="fw-semibold">{chat.service_name || chat.id}</span>
+                            <span className="ms-2 text-muted small">Abrir chat</span>
                         </button>
                     </li>
                 ))}
             </ul>
             {selectedChat && (
-                <div className="floating-chat-box" style={{ display: 'flex', flexDirection: 'column', marginTop: '2rem' }}>
-                    <div className="floating-chat-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#007bff', color: 'white', padding: '0.5rem 1rem', borderRadius: '8px 8px 0 0' }}>
-                        <span>Chat de servicio: {selectedChat.service_name || selectedChat.id}</span>
-                        <button onClick={() => setSelectedChat(null)} style={{ background: 'none', border: 'none', color: 'white', fontSize: '1.3rem', cursor: 'pointer' }}>&times;</button>
-                    </div>
-                    <div className="floating-chat-body" style={{ flex: 1, minHeight: '200px', maxHeight: '300px', overflowY: 'auto', background: '#f8f9fa', padding: '1rem' }}>
-                        {messages && messages.length > 0 ? (
-                            messages.map((msg, idx) => {
-                                let displayName = msg.sender_name || msg.user_name || msg.user || "Sin nombre";
-                                const isOwnMessage = msg.sender_id == userId;
-                                return (
-                                    <div
-                                        key={msg.id || idx}
-                                        className={`mb-2 message-bubble ${isOwnMessage ? 'own-message' : 'received-message'}`}
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            alignItems: isOwnMessage ? 'flex-end' : 'flex-start',
-                                        }}
-                                    >
-                                        <strong>{displayName}:</strong> {msg.content}
-                                    </div>
-                                )
-                            })
-                        ) : (
-                            <div className="text-muted">No hay mensajes aún.</div>
-                        )}
-                        <div ref={messagesEndRef} />
-                    </div>
-                    <div className="floating-chat-footer" style={{ display: 'flex', gap: '0.5rem', padding: '0.5rem', background: '#e9ecef', borderRadius: '0 0 8px 8px' }}>
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={input}
-                            onChange={event => setInput(event.target.value)}
-                            onKeyDown={event => event.key === 'Enter' && handleSend()}
-                            placeholder="Escribe un mensaje..."
-                            style={{ flex: 1 }}
-                        />
-                        <button type="button" className="btn btn-primary" onClick={handleSend}>
-                            Enviar
-                        </button>
+                <div className="chat-modal-overlay">
+                    <div className="chat-modal-container">
+                        <div className="floating-chat-header">
+                            <span>Chat de servicio: {selectedChat.service_name || selectedChat.id}</span>
+                            <button className="chat-close-btn" onClick={() => setSelectedChat(null)}>&times;</button>
+                        </div>
+                        <div className="floating-chat-body">
+                            {messages && messages.length > 0 ? (
+                                messages.map((msg, idx) => {
+                                    let displayName = msg.sender_name || msg.user_name || msg.user || "Sin nombre";
+                                    const isOwnMessage = msg.sender_id == userId;
+                                    return (
+                                        <div
+                                            key={msg.id || idx}
+                                            className={`mb-2 message-bubble ${isOwnMessage ? 'own-message' : 'received-message'}`}
+                                        >
+                                            <strong>{displayName}:</strong> {msg.content}
+                                        </div>
+                                    )
+                                })
+                            ) : (
+                                <div className="text-muted">No hay mensajes aún.</div>
+                            )}
+                            <div ref={messagesEndRef} />
+                        </div>
+                        <div className="floating-chat-footer">
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={input}
+                                onChange={event => setInput(event.target.value)}
+                                onKeyDown={event => event.key === 'Enter' && handleSend()}
+                                placeholder="Escribe un mensaje..."
+                            />
+                            <button type="button" className="btn btn-primary" onClick={handleSend}>
+                                Enviar
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
