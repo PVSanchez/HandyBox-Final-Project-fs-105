@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { userService } from '../services/users';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Spinner } from "../components/Spinner";
 
 export const Login = () => {
@@ -36,7 +36,7 @@ export const Login = () => {
     }
 
     return (
-        <div className="container">
+        <div className="container m-auto">
             <div className="row justify-content-center">
                 <div className="col-md-6">
                     <h1 className="text-center display-3 fw-bold">Login</h1>
@@ -69,6 +69,9 @@ export const Login = () => {
                                 />
                             </div>
                             <button type="submit" className="custom-btn w-100">Login</button>
+                            <div className="mt-3">
+                                <Link to="/forgot-password">¿Has olvidado la contraseña?</Link>
+                            </div>
                         </form>
                     )}
                 </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '../components/CheckoutForm';
+import { Spinner } from '../components/Spinner';
 
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
@@ -50,7 +51,7 @@ export const PaymentPage = () => {
             .finally(() => setLoading(false))
     }, [totalAmount, currency])
 
-    if (loading) return <p>Generando pago...</p>
+    if (loading) return <Spinner/>
     if (!clientSecret) return <p>Error: No se pudo obtener el clientSecret</p>
 
     const appearance = {

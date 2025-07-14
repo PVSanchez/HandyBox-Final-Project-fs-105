@@ -168,10 +168,79 @@ const updateUser = async (userData) => {
   }
 };
 
+const forgotPassword = async (email) => {
+  try {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const url = `${backendUrl}api/user/forgot-password`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return { success: true, message: data.message };
+    }
+
+    return {
+      success: false,
+      error: data.error || "Error al enviar el correo de recuperación",
+    };
+  } catch (error) {
+    console.error("Error al enviar recuperación:", error);
+    return {
+      success: false,
+      error: "Error de conexión al solicitar recuperación",
+    };
+  }
+};
+
+const resetPassword = async (newPassword, token) => {
+  try {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const url = `${backendUrl}api/user/reset-password`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token.trim()}`,
+      },
+      body: JSON.stringify({ password: newPassword }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return { success: true, message: data.message };
+    }
+
+    return {
+      success: false,
+      error: data.error || "Error al restablecer la contraseña",
+    };
+  } catch (error) {
+    console.error("Error al restablecer la contraseña:", error);
+    return {
+      success: false,
+      error: "Error de conexión al restablecer la contraseña",
+    };
+  }
+};
+
+
+
 export const userService = {
   SignupUser,
   LoginUser,
   LogoutUser,
   getCurrentUser,
   updateUser,
+  forgotPassword,
+  resetPassword,
 };
