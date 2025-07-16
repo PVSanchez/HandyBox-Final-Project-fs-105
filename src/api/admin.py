@@ -9,6 +9,7 @@ from api.models.StripePay import StripePay
 from api.models.Rate import Rate
 from api.models.ServiceState import ServiceState
 from api.models.UserDetail import UserDetail
+from api.models.Message import Message
 
 
 def setup_admin(app):
@@ -25,6 +26,7 @@ def setup_admin(app):
     admin.add_view(ModelView(Rate, db.session))
     admin.add_view(ModelView(ServiceState, db.session))
     admin.add_view(ModelView(UserDetail, db.session))
+    admin.add_view(ModelView(Message, db.session))
 
 
     # You can duplicate that line to add mew models

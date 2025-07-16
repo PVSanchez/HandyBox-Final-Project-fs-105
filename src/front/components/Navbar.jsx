@@ -8,9 +8,9 @@ function getUserRole() {
 		if (user && user.rol && user.rol.type) {
 			return user.rol.type;
 		}
-		return null;
+		return null
 	} catch {
-		return null;
+		return null
 	}
 }
 
@@ -48,8 +48,7 @@ export const Navbar = () => {
 			window.removeEventListener('userChanged', handleStorage)
 			window.removeEventListener('cartChanged', cartListener)
 		}
-	}, []);
-
+	}, [])
 
 	let userOptions = []
 	if (!userRole) {
@@ -89,6 +88,10 @@ export const Navbar = () => {
 		}
 	}
 
+	const handleChatClick = () => {
+		navigate('/chat')
+	}
+
 	return (
 		<nav className="navbar navbar-responsive d-flex justify-content-between align-items-center px-3">
 			<div className="navbar-left">
@@ -99,6 +102,10 @@ export const Navbar = () => {
 			</div>
 			<div className="navbar-center d-none d-md-flex"></div>
 			<div className="navbar-right d-flex align-items-center gap-3">
+				<div className="navbar-chat-container d-flex align-items-center ms-3" onClick={handleChatClick} style={{ cursor: 'pointer' }}>
+					<span className="navbar-chat-emoji" role="img" aria-label="chat">💬</span>
+					<span className="ms-2">Chat</span>
+				</div>
 				<div
 					className={`navbar-cart-container d-flex align-items-center${showCart ? '' : ' navbar-cart-disabled'}`}
 					onClick={handleCartClick}

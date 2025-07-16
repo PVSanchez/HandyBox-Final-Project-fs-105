@@ -5,6 +5,7 @@ import { CommentCard } from "../components/CommentCard";
 import { getRatesByServiceId } from "../services/APIrates";
 import { userService } from "../services/users";
 import { RateModal } from "../components/RateModal";
+import Message from "../components/Message";
 import '../style/ServiceDetail.css';
 import { Spinner } from "../components/Spinner";
 
@@ -23,6 +24,7 @@ export const ServiceDetail = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const [userHasPaidService, setUserHasPaidService] = useState(false);
     const [stripeId, setStripeId] = useState("");
+    const [showChat, setShowChat] = useState(false);
 
     useEffect(() => {
         const fetchService = async () => {
@@ -58,7 +60,7 @@ export const ServiceDetail = () => {
             const userResponse = await userService.getCurrentUser();
             if (userResponse.success) {
                 setCurrentUser(userResponse.data);
-                console.log(currentUser)
+
 
                 const backendUrl = import.meta.env.VITE_BACKEND_URL;
                 const token = sessionStorage.getItem('token');
@@ -72,15 +74,15 @@ export const ServiceDetail = () => {
                         }
                     });
                     const payments = await response.json();
-                    console.log("Pagos recibidos del backend:", payments);
+
 
                     const hasPaid = payments.some(payment => {
                         const serviceIds = payment.service_ids || [];
 
-                        console.log("Services id en el pago:", serviceIds);
+
 
                         if (serviceIds.map(String).includes(String(id))) {
-                            console.log("Stripe ID encontrado:", payment.id);
+
                             setStripeId(payment.id); // 💡 Aquí se guarda el ID correcto
                             return true;
                         }
@@ -110,13 +112,14 @@ export const ServiceDetail = () => {
         return selectedMedia.type === "image" ? (
             <img
                 src={selectedMedia.url}
-                className="img-fluid rounded main-media-img"
+                className="img-fluid rounded"
                 alt="Vista principal"
+                style={{ maxWidth: '800px', width: '100%', height: '400px', objectFit: 'contain' }}
             />
         ) : (
             <video
                 controls
-                className="main-media-video"
+                style={{ maxWidth: '800px', width: '100%', height: '400px', objectFit: 'contain' }}
             >
                 <source src={selectedMedia.url} type="video/mp4" />
                 Tu navegador no soporta video.
@@ -150,10 +153,8 @@ export const ServiceDetail = () => {
     return (
         <div className="container">
             {loading ? (
-                <div className="d-flex justify-content-center mt-5">
-                    <div className="align-self-center">
-                        <Spinner />
-                    </div>
+                <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '180px' }}>
+                    <Spinner />
                 </div>
             ) : (
                 <div className="row">
@@ -180,8 +181,6 @@ export const ServiceDetail = () => {
                                     ></i>
                                 </div>
                             )}
-
-                            {/* Miniatura de video con ícono */}
                             {service.video && (
                                 <div
                                     onClick={() => setSelectedMedia({ type: "video", url: service.video })}
@@ -202,8 +201,12 @@ export const ServiceDetail = () => {
                         <h3 className="my-4">Descripción</h3>
                         <p>{service.description} </p>
                         <h3 className="my-4">Comentarios</h3>
-                        <div className="comment-container mx-auto">
-                            <CommentCard rates={rates} />
+                        <div className="comment-container px-0">
+                            <div className="row">
+                                <div className="col-12 col-md-11 col-lg-10">
+                                    <CommentCard rates={rates} />
+                                </div>
+                            </div>
                         </div>
                         {currentUser && userHasPaidService && (
                             <div className="text-center my-3">
@@ -214,6 +217,17 @@ export const ServiceDetail = () => {
                                 >
                                     Dejar valoración
                                 </button>
+                            </div>
+                        )}
+                        {/* RateModal alineado con Bootstrap debajo de comentarios */}
+                        {currentUser && (
+                            <div className="my-4 d-flex justify-content-start">
+                                <RateModal
+                                    serviceId={id}
+                                    clientId={currentUser?.id}
+                                    stripeId={stripeId}
+                                    onSuccess={fetchRates}
+                                />
                             </div>
                         )}
                     </div>
@@ -286,16 +300,37 @@ export const ServiceDetail = () => {
                     </div>
                 </div>
             )}
+            {currentUser && showChat && (
+                <div className="chat-modal-overlay">
+                    <div className="chat-modal-container">
+                        <Message
+                            show={true}
+                            serviceId={id}
+                            professionalId={service.user_id}
+                            userId={currentUser.id}
+                            userName={currentUser.user_name}
+                            roomUserId={currentUser.id}
+                            roomUserName={currentUser.user_name}
+                        />
+                        <button
+                            className="chat-modal-close"
+                            onClick={() => setShowChat(false)}
+                            aria-label="Cerrar chat"
+                        >&times;</button>
+                    </div>
+                </div>
+            )}
+            {currentUser && !showChat && (
+                <button
+                    className="floating-chat-btn"
+                    onClick={() => setShowChat(true)}
+                >
+                    <span role="img" aria-label="chat">💬</span>
+                </button>
+            )}
             <Link to="/services" className="custom-btn ms-2 my-4">
                 Volver a servicios
             </Link>
-            {/* Llama al modal */}
-            <RateModal
-                serviceId={id}
-                clientId={currentUser?.id}
-                stripeId={stripeId}
-                onSuccess={fetchRates}
-            />
-        </div >
+        </div>
     )
 }

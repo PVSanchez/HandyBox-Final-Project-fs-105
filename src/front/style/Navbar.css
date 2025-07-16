@@ -98,6 +98,33 @@
   font-size: 13px;
   font-weight: 700;
 }
+.navbar-chat-container {
+  position: relative;
+  cursor: pointer;
+  color: #fff;
+}
+.navbar-chat-emoji {
+  font-size: 26px;
+  line-height: 1;
+  user-select: none;
+  vertical-align: middle;
+  display: inline-block;
+  width: 28px;
+  text-align: center;
+  color: #fff;
+  filter: none;
+}
+.navbar-chat-count {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background: var(--accent-blue);
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 7px;
+  font-size: 13px;
+  font-weight: 700;
+}
 .navbar-avatar-dropdown {
   position: relative;
 }
@@ -164,6 +191,16 @@
     width: 22px;
   }
   .navbar-cart-count {
+    font-size: 11px;
+    padding: 1px 5px;
+    top: -6px;
+    right: -7px;
+  }
+  .navbar-chat-emoji {
+    font-size: 22px;
+    width: 22px;
+  }
+  .navbar-chat-count {
     font-size: 11px;
     padding: 1px 5px;
     top: -6px;
