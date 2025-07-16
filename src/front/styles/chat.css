@@ -1,3 +1,19 @@
+.chat-btn {
+  font-size: 1.2rem;
+  padding: 1.1rem 2.5rem 1.1rem 1.1rem;
+  position: relative;
+  min-height: 56px;
+  border-radius: 1.2rem;
+}
+
+.chat-delete-btn {
+  font-size: 1.1rem;
+  padding: 0.2rem 0.7rem;
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
 .floating-chat-box {
   display: flex;
   flex-direction: column;
@@ -99,7 +115,6 @@
   outline: none;
 }
 
-/* Modal overlay and container for chat */
 .chat-modal-overlay {
   position: fixed;
   inset: 0;

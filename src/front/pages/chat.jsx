@@ -9,7 +9,36 @@ const SOCKET_URL = import.meta.env.VITE_BACKEND_URL;
 const Chat = () => {
     console.log("Chat component mounted");
     const [chats, setChats] = useState([]);
+    const [unreadChats, setUnreadChats] = useState([]);
     const [selectedChat, setSelectedChat] = useState(null);
+
+
+    const handleOpenChat = (chat) => {
+        setSelectedChat(chat);
+        setUnreadChats(prev => prev.filter(obj => !(obj.service_id === chat.service_id && obj.user_id == chat.user_id)));
+    };
+
+
+    const handleDeleteChat = async (chat) => {
+        if (!window.confirm('¿Seguro que quieres eliminar este chat?')) return;
+        try {
+            const token = sessionStorage.getItem("token");
+            const url = `${import.meta.env.VITE_BACKEND_URL}api/message/delete/${chat.service_id}/${chat.professional_id}/${chat.user_id}`;
+            const response = await fetch(url, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (response.ok) {
+                setChats(prev => prev.filter(c => !(c.service_id === chat.service_id && c.user_id == chat.user_id)));
+                setUnreadChats(prev => prev.filter(obj => !(obj.service_id === chat.service_id && obj.user_id == chat.user_id)));
+                if (selectedChat && selectedChat.service_id === chat.service_id && selectedChat.user_id == chat.user_id) {
+                    setSelectedChat(null);
+                }
+            }
+        } catch (error) {
+            alert('Error al eliminar el chat');
+        }
+    }
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState("");
     const [userId, setUserId] = useState("");
@@ -38,7 +67,32 @@ const Chat = () => {
                 const response = await fetch(url, {
                     headers: { Authorization: `Bearer ${token}` }
                 })
-                const services = response.ok ? await response.json() : []
+                const services = response.ok ? await response.json() : [];
+                const unread = [];
+                services.forEach(service => {
+                    if (userRole === "professional" && service.unread_by_client) {
+                        console.log(`Servicio ${service.id} - unread_by_client:`, service.unread_by_client);
+                        (service.clients || []).forEach(client => {
+                            const unreadCount = service.unread_by_client[client.id];
+                            console.log(`  Cliente ${client.id} (${client.name}) - unreadCount:`, unreadCount);
+                            if (
+                                unreadCount > 0 &&
+                                client.id !== service.professional_id &&
+                                service.id && client.id
+                            ) {
+                                unread.push({ service_id: service.id, user_id: client.id });
+                            }
+                        });
+                    }
+                    if (userRole !== "professional") {
+                        console.log(`Servicio ${service.id} - unread_count:`, service.unread_count);
+                        if (service.unread_count > 0 && service.id) {
+                            unread.push({ service_id: service.id, user_id: userId });
+                        }
+                    }
+                });
+                console.log('Resultado final unreadChats:', unread);
+                setUnreadChats(unread);
                 if (userRole === "professional") {
                     setChats(
                         services
@@ -72,7 +126,6 @@ const Chat = () => {
                     )
                 }
             } catch (error) {
-                console.error("Error en fetchChats:", error);
                 setChats([]);
             }
             setLoading(false)
@@ -148,28 +201,43 @@ const Chat = () => {
 
     return (
         <div className="chat-page-container">
-            <h2 className="text-center">Mis Chats</h2>
+            <h2 className="text-center mt-5">Mis Chats</h2>
             {loading ? <div className="d-flex justify-content-center align-items-center mt-5"><Spinner /></div> : null}
-            <ul className="chat-list">
-                {chats.length === 0 && !loading ? <li>No tienes chats.</li> : null}
-                {chats.map(chat => (
-                    <li key={chat.id} className="chat-list-item">
-                        <button
-                            className="chat-list-btn btn btn-outline-primary w-100 mb-2"
-                            onClick={() => setSelectedChat(chat)}
-                        >
-                            <span className="fw-semibold">{chat.service_name || chat.id}</span>
-                            <span className="ms-2 text-muted small">Abrir chat</span>
-                        </button>
-                    </li>
-                ))}
-            </ul>
+            <div className="d-flex justify-content-center">
+                <ul className="chat-list">
+                    {chats.length === 0 && !loading ? <li>No tienes chats.</li> : null}
+                    {chats.map(chat => {
+                        const isUnread = unreadChats.some(obj => obj.service_id === chat.service_id && obj.user_id == chat.user_id);
+                        return (
+                            <li key={chat.id} className="chat-list-item">
+                                <button
+                                    className={`chat-list-btn btn chat-btn flex-grow-1 mb-2 ${isUnread ? 'btn-custom-unread' : 'btn-custom-read'}`}
+                                    onClick={() => handleOpenChat(chat)}
+                                >
+                                    <span className="fw-semibold">{chat.service_name || chat.id}</span>
+                                    <span className="ms-2 text-muted small">Abrir chat</span>
+                                    {isUnread && <span className="badge bg-danger ms-2">Nuevo</span>}
+                                </button>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </div>
             {selectedChat && (
                 <div className="chat-modal-overlay">
                     <div className="chat-modal-container">
-                        <div className="floating-chat-header">
+                        <div className="floating-chat-header d-flex justify-content-between align-items-center">
                             <span>Chat de servicio: {selectedChat.service_name || selectedChat.id}</span>
-                            <button className="chat-close-btn" onClick={() => setSelectedChat(null)}>&times;</button>
+                            <div>
+                                <button
+                                    className="btn btn chat-delete-btn me-2"
+                                    title="Eliminar chat"
+                                    onClick={() => handleDeleteChat(selectedChat)}
+                                >
+                                    🗑️
+                                </button>
+                                <button className="chat-close-btn" onClick={() => setSelectedChat(null)}>&times;</button>
+                            </div>
                         </div>
                         <div className="floating-chat-body">
                             {messages && messages.length > 0 ? (
