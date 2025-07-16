@@ -23,6 +23,7 @@ sqlalchemy = "*"
 bcrypt = "*"
 stripe = "*"
 flask-socketio = "*"
+eventlet = "*"
 
 [requires]
 python_version = "3.13"

@@ -43,12 +43,24 @@ export const Navbar = () => {
 			setCartCount(Array.isArray(cart) ? cart.length : 0)
 		};
 		window.addEventListener('cartChanged', cartListener)
+
+		const handleClickOutside = (event) => {
+			if (
+				dropdownOpen &&
+				!event.target.closest('.navbar-avatar-container')
+			) {
+				setDropdownOpen(false)
+			}
+		}
+		document.addEventListener('mousedown', handleClickOutside)
+
 		return () => {
 			window.removeEventListener('storage', handleStorage)
 			window.removeEventListener('userChanged', handleStorage)
 			window.removeEventListener('cartChanged', cartListener)
+			document.removeEventListener('mousedown', handleClickOutside)
 		}
-	}, [])
+	}, [dropdownOpen])
 
 	let userOptions = []
 	if (!userRole) {
