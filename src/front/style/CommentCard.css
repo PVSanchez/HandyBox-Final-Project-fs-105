@@ -1,3 +1,8 @@
+/* Justificación izquierda y ancho completo para la lista de comentarios */
+.comment-list {
+  width: 100%;
+  display: block;
+}
 
 .comment-user-img {
   height: 60px;

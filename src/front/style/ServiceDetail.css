@@ -21,8 +21,6 @@
 .comment-container {
   max-width: 800px;
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
 }
 @media (max-width: 991.98px) {
   .comment-container {

@@ -153,10 +153,8 @@ export const ServiceDetail = () => {
     return (
         <div className="container">
             {loading ? (
-                <div className="d-flex justify-content-center mt-5">
-                    <div className="align-self-center">
-                        <Spinner />
-                    </div>
+                <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '180px' }}>
+                    <Spinner />
                 </div>
             ) : (
                 <div className="row">
@@ -166,195 +164,173 @@ export const ServiceDetail = () => {
                             <div className="media-container mx-auto">
                                 {renderMainMedia()}
                             </div>
-                            <div className="d-flex justify-content-center gap-2 my-3">
-                                {service.img && (
-                                    <div
-                                        onClick={() => setSelectedMedia({ type: "image", url: service.img })}
-                                        style={{
-                                            width: '100px',
-                                            height: '100px',
-                                            cursor: 'pointer',
-                                            border: selectedMedia?.url === service.img ? '2px solid blue' : '1px solid #ccc',
-                                            overflow: 'hidden',
-                                            borderRadius: '8px',
-                                            position: 'relative'
-                                        }}
-                                    >
-                                        <img
-                                            src={service.img}
-                                            alt="Miniatura imagen"
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                        />
-                                        <i
-                                            className="fa-solid fa-image"
-                                            style={{
-                                                position: 'absolute',
-                                                bottom: '6px',
-                                                right: '6px',
-                                                backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                                                padding: '6px',
-                                                borderRadius: '50%',
-                                                fontSize: '16px',
-                                                color: '#333'
-                                            }}
-                                        ></i>
-                                    </div>
-                                )}
-                                {service.video && (
-                                    <div
-                                        onClick={() => setSelectedMedia({ type: "video", url: service.video })}
-                                        style={{
-                                            width: '100px',
-                                            height: '100px',
-                                            cursor: 'pointer',
-                                            border: selectedMedia?.url === service.video ? '2px solid blue' : '1px solid #ccc',
-                                            overflow: 'hidden',
-                                            borderRadius: '8px',
-                                            position: 'relative'
-                                        }}
-                                    >
-                                        <video
-                                            src={service.video}
-                                            muted
-                                            preload="metadata"
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                        />
-                                        <i
-                                            className="fa-solid fa-video"
-                                            style={{
-                                                position: 'absolute',
-                                                bottom: '6px',
-                                                right: '6px',
-                                                backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                                                padding: '6px',
-                                                borderRadius: '50%',
-                                                fontSize: '16px',
-                                                color: '#333'
-                                            }}
-                                        ></i>
-                                    </div>
-                                )}
-                            </div>
-                            <h3 className="my-3">Descripción</h3>
-                            <p>{service.description} </p>
-                            <h3 className="my-3">Comentarios</h3>
-                            <div className="comment-list">
-                                <CommentCard rates={rates} alignLeft={true} />
-                            </div>
-                            {currentUser && userHasPaidService && (
-                                <div className="text-center my-3">
-                                    <button
-                                        className="custom-btn"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#rateModal"
-                                    >
-                                        Dejar valoración
-                                    </button>
+                        </div>
+                        <div className="d-flex justify-content-center gap-2 my-3 flex-wrap">
+                            {service.img && (
+                                <div
+                                    onClick={() => setSelectedMedia({ type: "image", url: service.img })}
+                                    className={`media-thumbnail${selectedMedia?.url === service.img ? ' selected' : ''}`}
+                                >
+                                    <img
+                                        src={service.img}
+                                        alt="Miniatura imagen"
+                                        className="media-thumbnail-img"
+                                    />
+                                    <i
+                                        className="fa-solid fa-image media-thumbnail-icon"
+                                    ></i>
+                                </div>
+                            )}
+                            {service.video && (
+                                <div
+                                    onClick={() => setSelectedMedia({ type: "video", url: service.video })}
+                                    className={`media-thumbnail${selectedMedia?.url === service.video ? ' selected' : ''}`}
+                                >
+                                    <video
+                                        src={service.video}
+                                        muted
+                                        preload="metadata"
+                                        className="media-thumbnail-video"
+                                    />
+                                    <i
+                                        className="fa-solid fa-video media-thumbnail-icon"
+                                    ></i>
                                 </div>
                             )}
                         </div>
-                        <div className="col-12 col-md-4">
-                            <h5 className="card-title my-2">Servicio ofrecido por:</h5>
-                            <div className="d-flex justify-content-center mb-3">
-                                <Link to={`/user-detail?id=${service.user_id}`} className="w-100" style={{ textDecoration: 'none', color: 'inherit' }}>
-                                    <div className="card text-center align-items-center w-100 mb-3">
-                                        <img
-                                            src={service.user.img || defaultImg}
-                                            className="card-img-top mt-3 img-fluid"
-                                            alt={`Foto de ${service.user.user_name}`}
-                                            style={{ borderRadius: "50%", maxWidth: "150px", width: "100%", height: "auto" }}
-                                        />
-                                        <div className="card-body">
-                                            <ul className="list-group list-group-flush mb-3">
-                                                <li className="list-group-item py-3 px-2 text-primary fw-semibold">
-                                                    Nombre: <span className="fw-bold text-decoration-underline">{service.user.first_name}</span>
-                                                </li>
-                                                <li className="list-group-item py-3 px-2 text-primary fw-semibold">Apellidos: {service.user.last_name}</li>
-                                                <li className="list-group-item py-3 px-2 text-primary fw-semibold">Email: {service.user.email}</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </Link>
+                        <h3 className="my-4">Descripción</h3>
+                        <p>{service.description} </p>
+                        <h3 className="my-4">Comentarios</h3>
+                        <div className="comment-container px-0">
+                            <div className="row">
+                                <div className="col-12 col-md-11 col-lg-10">
+                                    <CommentCard rates={rates} />
+                                </div>
                             </div>
-                            <div className="card card-body w-100 mb-3">
-                                <h4 className="mb-3">Servicio a pagar</h4>
-                                <ul className="list-group mb-3">
-                                    <div className="d-flex flex-column align-items-center align-items-md-start w-100">
-                                        <div className="d-flex flex-column flex-md-row align-items-center w-100 mb-2 position-relative">
-                                            {service.image && (
-                                                <img src={service.image} alt={service.name} className="img-thumbnail me-md-3 mb-2 mb-md-0 img-fluid" style={{ maxWidth: '60px', borderRadius: '6px' }} />
-                                            )}
-                                            <div className="d-flex align-items-center w-100 justify-content-between">
-                                                <div className="fw-semibold" style={{ fontSize: '1.08rem' }}>{service.name}</div>
-                                            </div>
-                                        </div>
-                                        <div className="d-flex align-items-center flex-wrap w-100 justify-content-center justify-content-md-start">
-                                            <span className="me-1">Precio:</span>
-                                            <span className="fw-bold">{service.price} €</span>
-                                            <span className="mx-2">x</span>
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                value={quantity}
-                                                onChange={e => setQuantity(parseInt(e.target.value) || 1)}
-                                                className="form-control d-inline-block mx-1"
-                                                style={{ width: '70px', textAlign: 'center', borderRadius: '4px', border: '1px solid #ccc' }}
-                                                aria-label="Cantidad de horas"
-                                            />
-                                            <span className="ms-3">
-                                                <span className="ms-1"> horas </span>
-                                                = <span className="fw-bold">{total.toFixed(2)} €</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </ul>
-                                <h5 className="mt-3">Total: {total} €</h5>
-                                <button className="custom-btn w-100 mt-3" onClick={handleAddToCart}>
-                                    Añadir y continuar al pago
+                        </div>
+                        {currentUser && userHasPaidService && (
+                            <div className="text-center my-3">
+                                <button
+                                    className="custom-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#rateModal"
+                                >
+                                    Dejar valoración
                                 </button>
                             </div>
+                        )}
+                        {/* RateModal alineado con Bootstrap debajo de comentarios */}
+                        {currentUser && (
+                            <div className="my-4 d-flex justify-content-start">
+                                <RateModal
+                                    serviceId={id}
+                                    clientId={currentUser?.id}
+                                    stripeId={stripeId}
+                                    onSuccess={fetchRates}
+                                />
+                            </div>
+                        )}
+                    </div>
+                    <div className="col-12 col-md-4 mt-4 mt-md-0">
+                        <h5 className="card-title my-4">Servicio ofrecido por:</h5>
+                        <div className="d-flex justify-content-center">
+                            <Link to={`/user-detail?id=${service.user_id}`} className="w-100 text-decoration-none text-reset">
+                                <div className="card text-center align-items-center w-100 h-100">
+                                    <div className="row g-0 w-100">
+                                        <div className="col-12 d-flex justify-content-center mt-3">
+                                            <img
+                                                src={service.user.img || defaultImg}
+                                                className="card-img-top rounded-circle user-profile-img"
+                                                alt={`Foto de ${service.user.user_name}`}
+                                            />
+                                        </div>
+                                        <div className="col-12">
+                                            <div className="card-body p-2">
+                                                <ul className="list-group list-group-flush mb-3">
+                                                    <li className="list-group-item py-2 px-2 text-primary fw-semibold">
+                                                        Nombre: <span className="fw-bold text-decoration-underline">{service.user.first_name}</span>
+                                                    </li>
+                                                    <li className="list-group-item py-2 px-2 text-primary fw-semibold">Apellidos: {service.user.last_name}</li>
+                                                    <li className="list-group-item py-2 px-2 text-primary fw-semibold">Email: {service.user.email}</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+                        <div className="card card-body mt-3">
+                            <h4 className="mb-3">Servicio a pagar</h4>
+                            <ul className="list-group mb-3">
+                                <li className="list-group-item border-0 p-0">
+                                    <div className="row g-0 align-items-center">
+                                        {service.image && (
+                                            <div className="col-3 col-sm-2 d-flex justify-content-center">
+                                                <img src={service.image} alt={service.name} className="img-thumbnail cart-service-img" />
+                                            </div>
+                                        )}
+                                        <div className="col">
+                                            <div className="cart-service-name">{service.name}</div>
+                                            <div className="d-flex align-items-center flex-wrap cart-service-details mt-2">
+                                                <span className="me-1">Precio:</span>
+                                                <span className="fw-bold">{service.price} €</span>
+                                                <span className="mx-2">x</span>
+                                                <input
+                                                    type="number"
+                                                    min="1"
+                                                    value={quantity}
+                                                    onChange={e => setQuantity(parseInt(e.target.value) || 1)}
+                                                    className="form-control d-inline-block mx-1 cart-quantity-input"
+                                                    aria-label="Cantidad de horas"
+                                                />
+                                                <span className="ms-2">
+                                                    <span className="ms-1"> horas </span>
+                                                    = <span className="fw-bold">{total.toFixed(2)} €</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <h5 className="mt-3">Total: {total} €</h5>
+                            <button className="custom-btn w-100 mt-3" onClick={handleAddToCart}>
+                                Añadir y continuar al pago
+                            </button>
                         </div>
                     </div>
-                    {currentUser && showChat && (
-                        <div className="chat-modal-overlay">
-                            <div className="chat-modal-container">
-                                <Message
-                                    show={true}
-                                    serviceId={id}
-                                    professionalId={service.user_id}
-                                    userId={currentUser.id}
-                                    userName={currentUser.user_name}
-                                    roomUserId={currentUser.id}
-                                    roomUserName={currentUser.user_name}
-                                />
-                                <button
-                                    className="chat-modal-close"
-                                    onClick={() => setShowChat(false)}
-                                    aria-label="Cerrar chat"
-                                >&times;</button>
-                            </div>
-                        </div>
-                    )}
-                    {currentUser && !showChat && (
+                </div>
+            )}
+            {currentUser && showChat && (
+                <div className="chat-modal-overlay">
+                    <div className="chat-modal-container">
+                        <Message
+                            show={true}
+                            serviceId={id}
+                            professionalId={service.user_id}
+                            userId={currentUser.id}
+                            userName={currentUser.user_name}
+                            roomUserId={currentUser.id}
+                            roomUserName={currentUser.user_name}
+                        />
                         <button
-                            className="floating-chat-btn"
-                            onClick={() => setShowChat(true)}
-                        >
-                            <span role="img" aria-label="chat">💬</span>
-                        </button>
-                    )}
-                </>
+                            className="chat-modal-close"
+                            onClick={() => setShowChat(false)}
+                            aria-label="Cerrar chat"
+                        >&times;</button>
+                    </div>
+                </div>
+            )}
+            {currentUser && !showChat && (
+                <button
+                    className="floating-chat-btn"
+                    onClick={() => setShowChat(true)}
+                >
+                    <span role="img" aria-label="chat">💬</span>
+                </button>
             )}
             <Link to="/services" className="custom-btn ms-2 my-4">
                 Volver a servicios
             </Link>
-            {/* Llama al modal */}
-            <RateModal
-                serviceId={id}
-                clientId={currentUser?.id}
-                stripeId={stripeId}
-                onSuccess={fetchRates}
-            />
-        </div >
+        </div>
     )
 }

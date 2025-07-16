@@ -22,7 +22,17 @@ const Message = ({ show, serviceId, professionalId, userId, userName, roomUserId
             socketRef.current.disconnect()
         }
 
-        console.log("Probando conexión socket.io a:", SOCKET_URL);
+        const token = sessionStorage.getItem("token")
+        fetch(`${import.meta.env.VITE_BACKEND_URL}api/message/read/${serviceId}/${roomUserId}`, {
+            method: "PUT",
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(res => res.json())
+            .then(() => {
+                window.dispatchEvent(new Event('unreadChatsChanged'))
+            })
+            .catch(() => { })
+
         socketRef.current = io(SOCKET_URL, {
             transports: ["websocket"],
             auth: {
@@ -33,14 +43,13 @@ const Message = ({ show, serviceId, professionalId, userId, userName, roomUserId
             timeout: 2000,
         });
         socketRef.current.on("connect", () => {
-            console.log("Conexión socket.io exitosa");
-        });
+            console.log("Conexión socket.io exitosa")
+        })
         socketRef.current.on("disconnect", (reason) => {
             console.warn("Socket desconectado:", reason)
         })
 
         socketRef.current.emit("join_room", { service_id: serviceId, professional_id: professionalId, user_id: roomUserId })
-
 
         const addMessages = (newMessages) => {
             setMessages(previousMessages => {
@@ -88,20 +97,20 @@ const Message = ({ show, serviceId, professionalId, userId, userName, roomUserId
                 user_id: senderId,
                 sender_id: senderId,
                 room_user_id: roomUserId
-            };
+            }
             if (socketRef.current && socketRef.current.connected) {
-                socketRef.current.emit("send_message", msgObj);
+                socketRef.current.emit("send_message", msgObj)
             } else {
                 console.error("No conectado al chat, mensaje no enviado.")
             }
             setInput("")
         }
-    };
+    }
 
     const [open, setOpen] = useState(show)
     useEffect(() => { setOpen(show); }, [show])
 
-    if (!show) return null;
+    if (!show) return null
 
     return (
         <div className="chat-modal-content">

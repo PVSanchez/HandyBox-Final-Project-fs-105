@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import "../styles/chat.css";
+import { Spinner } from "../components/Spinner";
 
 
 const SOCKET_URL = import.meta.env.VITE_BACKEND_URL;
@@ -103,6 +104,16 @@ const Chat = () => {
         newSocket.on("new_message", (msg) => {
             setMessages(prev => [...prev, msg])
         })
+        const token = sessionStorage.getItem("token")
+        fetch(`${import.meta.env.VITE_BACKEND_URL}api/message/read/${selectedChat.service_id}/${selectedChat.user_id}`, {
+            method: "PUT",
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(res => res.json())
+            .then(() => {
+                window.dispatchEvent(new Event('unreadChatsChanged'))
+            })
+            .catch(() => { })
         return () => {
             newSocket.disconnect()
         }
@@ -137,8 +148,8 @@ const Chat = () => {
 
     return (
         <div className="chat-page-container">
-            <h2>Mis Chats</h2>
-            {loading ? <div>Cargando chats...</div> : null}
+            <h2 className="text-center">Mis Chats</h2>
+            {loading ? <div className="d-flex justify-content-center align-items-center mt-5"><Spinner /></div> : null}
             <ul className="chat-list">
                 {chats.length === 0 && !loading ? <li>No tienes chats.</li> : null}
                 {chats.map(chat => (

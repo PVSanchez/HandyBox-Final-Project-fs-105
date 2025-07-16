@@ -95,6 +95,19 @@ def get_unread_count(service_id, user_id):
         return jsonify({'error': str(e)}), 500
 
 
+@api.route('/unread_total/<int:user_id>', methods=['GET'])
+@jwt_required()
+def get_total_unread(user_id):
+    try:
+        count = Message.query.filter(
+            Message.is_read == False,
+            Message.sender_id != user_id
+        ).count()
+        return jsonify({'unread_total': count}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @socketio.on('join_room')
 def handle_join_room(data):
     service_id = data.get('service_id')
@@ -117,8 +130,8 @@ def handle_join_room(data):
 @socketio.on('send_message')
 def handle_send_message(data):
     service_id = data.get('service_id')
-    user_id = data.get('user_id')  
-    sender_id = data.get('sender_id') 
+    user_id = data.get('user_id')
+    sender_id = data.get('sender_id')
     sender_role = data.get('sender_role')
     text = data.get('text') or data.get('content')
     professional_id = data.get('professional_id')
@@ -148,12 +161,12 @@ def handle_send_message(data):
 @jwt_required()
 def get_services_with_messages(user_id):
     try:
-       
+
         user = User.query.get(user_id)
         user_role = user.rol.type.value if user and user.rol else None
         result = []
         if user_role == "professional":
-            
+
             service_ids = db.session.query(Message.service_id).filter(
                 Message.service_id.in_(
                     db.session.query(Service.id).filter(
@@ -165,7 +178,7 @@ def get_services_with_messages(user_id):
             services = Service.query.filter(Service.id.in_(service_ids)).all()
             for service in services:
                 service_dict = service.serialize()
-              
+
                 client_ids = db.session.query(Message.sender_id).filter(
                     Message.service_id == service.id,
                     Message.sender_id != service.user_id
@@ -178,11 +191,11 @@ def get_services_with_messages(user_id):
                         clients.append(
                             {"id": user_client.id, "name": user_client.user_name})
                 service_dict["clients"] = clients
-             
+
                 if clients:
                     result.append(service_dict)
         else:
-       
+
             service_ids = db.session.query(Message.service_id).filter(
                 Message.sender_id == user_id
             ).distinct().all()
@@ -190,7 +203,7 @@ def get_services_with_messages(user_id):
             services = Service.query.filter(Service.id.in_(service_ids)).all()
             for service in services:
                 service_dict = service.serialize()
-              
+
                 user_client = User.query.get(user_id)
                 service_dict["clients"] = [
                     {"id": user_client.id, "name": user_client.user_name}] if user_client else []
