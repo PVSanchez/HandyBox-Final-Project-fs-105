@@ -25,6 +25,7 @@ export const ServiceDetail = () => {
     const [userHasPaidService, setUserHasPaidService] = useState(false);
     const [stripeId, setStripeId] = useState("");
     const [showChat, setShowChat] = useState(false);
+    const [showRateModal, setShowRateModal] = useState(false);
 
     useEffect(() => {
         const fetchService = async () => {
@@ -212,21 +213,21 @@ export const ServiceDetail = () => {
                             <div className="text-center my-3">
                                 <button
                                     className="custom-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#rateModal"
+                                    onClick={() => setShowRateModal(true)}
                                 >
                                     Dejar valoración
                                 </button>
                             </div>
                         )}
-                        {/* RateModal alineado con Bootstrap debajo de comentarios */}
-                        {currentUser && (
+                        {/* RateModal solo se renderiza si showRateModal es true */}
+                        {showRateModal && currentUser && (
                             <div className="my-4 d-flex justify-content-start">
                                 <RateModal
                                     serviceId={id}
                                     clientId={currentUser?.id}
                                     stripeId={stripeId}
-                                    onSuccess={fetchRates}
+                                    onSuccess={() => { fetchRates(); setShowRateModal(false); }}
+                                    onClose={() => setShowRateModal(false)}
                                 />
                             </div>
                         )}

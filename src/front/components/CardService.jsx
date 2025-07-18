@@ -33,11 +33,11 @@ export const CardService = ({ services, rates }) => {
                         : null;
 
                 return (
-                    <div key={service.id} className="card m-3" style={{ width: "350px" }}>
+                    <div key={service.id} className="card m-3" style={{ width: "260px" }}>
                         <img src={service.img || "https://placeholder.pics/svg/300x200"}
                             className="card-img-top"
                             alt={service.name}
-                            style={{ width: "350px", height: "200px", objectFit: "cover" }} />
+                            style={{ width: "260px", height: "140px", objectFit: "cover" }} />
 
                         <div className="card-body">
                             <h5 className="card-title">{service.name}</h5>
@@ -49,32 +49,34 @@ export const CardService = ({ services, rates }) => {
                                             <span
                                                 key={star}
                                                 style={{
-                                                    fontSize: "1.3rem",
+                                                    fontSize: "1.1rem",
                                                     color: star <= Math.round(average) ? "#ffc107" : "#e4e5e9"
                                                 }}
                                             >
                                                 ★
                                             </span>
                                         ))}
-                                        <span className="ms-2 text-muted">
+                                        <span className="ms-2 text-muted" style={{ fontSize: "0.95rem" }}>
                                             {average} ({serviceRates.length})
                                         </span>
                                     </div>
                                 ) : (
-                                    <span
-                                        style={{
-                                            fontSize: "1.3rem",
-                                            color: "#e4e5e9"
-                                        }}>
-                                        ★★★★★
-                                    </span>
+                                    <div className="d-flex justify-content-center align-items-center mb-2">
+                                        <span
+                                            style={{
+                                                fontSize: "1.1rem",
+                                                color: "#e4e5e9"
+                                            }}>
+                                            ★★★★★
+                                        </span>
+                                    </div>
                                 )}
                             </div>
 
-                            <p>{service.description}</p>
-                            <p className="card-text">Desde {service.price}€</p>
-                            <Link className="custom-btn-1 ms-2" to={`/service/${service.id}`} >Ver más</Link>
-                            <button className="custom-btn ms-2" onClick={() => addToCart(service)}>Añadir al carrito</button>
+                            <p style={{ height: "38px", overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", fontSize: "0.95rem", marginBottom: "0.5rem" }}>{service.description}</p>
+                            <p className="card-text mt-4" style={{ fontSize: "0.95rem" }}>Desde {service.price}€</p>
+                            <Link className="custom-btn-1 ms-2" to={`/service/${service.id}`} style={{ fontSize: "0.95rem", padding: "0.3rem 0.8rem" }}>Ver más</Link>
+                            <button className="custom-btn ms-2" onClick={() => addToCart(service)} style={{ fontSize: "0.95rem", padding: "0.3rem 0.8rem" }}>Añadir al carrito</button>
                         </div>
                     </div>
                 );

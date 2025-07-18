@@ -150,16 +150,6 @@ export const ModifyService = () => {
                                     className="form-control"
                                 />
                             </div>
-                            <div className="mb-3">
-                                <label className="form-label">URL</label>
-                                <input
-                                    type="text"
-                                    name="url"
-                                    value={form.url || ""}
-                                    onChange={handleChange}
-                                    className="form-control"
-                                />
-                            </div>
 
                             <button type="submit" className="custom-btn-1 w-100">
                                 Guardar Cambios

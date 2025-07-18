@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Spinner } from "../components/Spinner";
 import "../style/UserDetail.css";
 
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 export const UserDetail = () => {
+  const navigate = useNavigate();
   const [detail, setDetail] = useState(null);
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,6 +17,11 @@ export const UserDetail = () => {
   const location = useLocation();
 
   useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
     const params = new URLSearchParams(location.search)
     const userId = params.get("id")
     if (!userId) {
@@ -25,7 +31,6 @@ export const UserDetail = () => {
     }
     const fetchData = async () => {
       try {
-        const token = sessionStorage.getItem("token")
         const res = await fetch(`${URL}/api/user-detail/${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
@@ -48,7 +53,7 @@ export const UserDetail = () => {
       }
     }
     fetchData()
-  }, [location.search])
+  }, [location.search, navigate])
 
   useEffect(() => {
     const handleScroll = () => {

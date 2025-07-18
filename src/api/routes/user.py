@@ -1,17 +1,21 @@
+# Endpoint para enviar instrucciones para hacerse profesional destacado
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from api.models.User import User
-from api.models.Rol import Rol, Role
-from flask import Blueprint, jsonify, request
-from api.database.db import db
-import bcrypt
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-import re
-from datetime import datetime, timedelta
-from flask_cors import CORS
-import cloudinary
-import cloudinary.uploader
-import os
 from api.service.email import send_email
+import os
+import cloudinary.uploader
+import cloudinary
+from flask_cors import CORS
+from datetime import datetime, timedelta
+import re
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+import bcrypt
+from api.database.db import db
+from flask import Blueprint, jsonify, request
+from api.models.Rol import Rol, Role
+from api.models.User import User
+
+
+
 
 api = Blueprint('api/user', __name__)
 CORS(api)
@@ -27,6 +31,7 @@ def validate_email(email):
     pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
     return re.match(pattern, email) is not None
 
+
 def validate_password(password):
     if len(password) < 8:
         return False
@@ -38,11 +43,13 @@ def validate_password(password):
         return False
     return True
 
+
 def get_rol_id_by_type(rol_type):
     rol = Rol.query.filter_by(type=rol_type).first()
     if rol:
         return rol.id
     return None
+
 
 @api.route('/', methods=['GET'])
 def get_users():
@@ -247,3 +254,32 @@ def reset_password():
     db.session.commit()
 
     return jsonify({'message': 'Contraseña restablecida con éxito'}), 200
+
+
+
+@api.route('/send-featured-professional', methods=['POST'])
+def send_featured_professional():
+    try:
+        body = request.get_json()
+        email = body.get('email')
+
+        if not email or not validate_email(email):
+            return jsonify({'error': 'Email inválido'}), 400
+
+        user = User.query.filter_by(email=email).first()
+        instrucciones = (
+            "¡Gracias por tu interés en ser profesional destacado en HandyBox!\n\n"
+            "¿Cómo funciona?\n"
+            "1. Responde a este correo indicando tu especialidad y experiencia.\n"
+            "2. Nuestro equipo revisará tu perfil y te contactará con los siguientes pasos.\n"
+            "3. Si cumples los requisitos, recibirás el sello de profesional destacado y aparecerás en los primeros resultados.\n\n"
+            "Si tienes dudas, responde a este correo y te ayudaremos.\n\n"
+            "¡Esperamos verte pronto como profesional destacado!"
+        )
+        send_email(
+            email, "Instrucciones para ser profesional destacado en HandyBox", instrucciones)
+
+        return jsonify({'message': 'Correo enviado correctamente'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500

@@ -1,4 +1,4 @@
-/* Justificación izquierda y ancho completo para la lista de comentarios */
+
 .comment-list {
   width: 100%;
   display: block;
@@ -22,7 +22,6 @@
   }
 }
 
-/* Estrellas de valoración */
 .comment-star {
   font-size: 1.2rem;
   color: #e4e5e9;
