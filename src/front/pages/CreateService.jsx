@@ -110,10 +110,6 @@ export const CreateService = () => {
                                             <label className="form-label">Video</label>
                                             <input type="file" accept="video/*" onChange={handleVideoChange} className="form-control" />
                                         </div>
-                                        <div className="mb-3">
-                                            <label className="form-label">URL</label>
-                                            <input type="text" name="url" value={form.url} onChange={handleChange} className="form-control" />
-                                        </div>
                                         <div className="form-check mb-3">
                                             <input
                                                 className="form-check-input"
