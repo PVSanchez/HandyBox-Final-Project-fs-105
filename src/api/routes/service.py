@@ -19,18 +19,39 @@ cloudinary.config(
 
 
 @api.route('/', methods=['GET'])
-def get_all_service():
-    all_service = Service.query.all()
-    all_service_serialize = list(
-        map(lambda service: service.serialize(), all_service))
-    return jsonify(all_service_serialize), 200
+@jwt_required(optional=True)
+def get_all_services():
+    user_id = get_jwt_identity()
+    if user_id:
+        # Si está logueado, puede ver todos sus servicios (activos o no)
+        user = User.query.get(int(user_id))
+        if user:
+            services = Service.query.filter(
+                (Service.status == True) | (Service.user_id == user.id)
+            ).all()
+    else:
+        # Público: solo servicios activos
+        services = Service.query.filter_by(status=True).all()
 
-@api.route('/<int:service_id>')
+    return jsonify([s.serialize() for s in services]), 200
+
+
+@api.route('/<int:service_id>', methods=['GET'])
+@jwt_required(optional=True)
 def get_service_by_id(service_id):
-    id_service = Service.query.get(service_id)
-    if not id_service:
+
+    service = Service.query.get(service_id)
+    if not service:
         return jsonify({"error": "Servicio no encontrado"}), 404
-    return jsonify(id_service.serialize()), 200
+
+    current_user_id = get_jwt_identity()
+
+    # Si el servicio está desactivado y el usuario no es el propietario
+    if not service.status and service.user_id != current_user_id:
+        return jsonify({"error": "El servicio no está activo"}), 403
+
+    return jsonify(service.serialize()), 200
+
 
 @api.route('/users/<int:user_id>')
 def get_services_by_user(user_id):
@@ -93,7 +114,7 @@ def create_service():
 
     if "price" not in body:
         return jsonify({"error": "Falta el precio"}), 400
-    
+
     existing_name = Service.query.filter_by(name=body["name"]).first()
 
     if existing_name:
@@ -115,3 +136,82 @@ def create_service():
     db.session.commit()
 
     return jsonify(new_service.serialize()), 201
+
+
+@api.route('/services/<int:id>', methods=['PUT'])
+@jwt_required()
+def update_service(id):
+    body = request.get_json()
+    if not body:
+        return jsonify({"error": "Faltan datos"}), 400
+
+    current_user_id = int(get_jwt_identity())
+    user = User.query.get(current_user_id)
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    service = Service.query.get(id)
+    if not service or service.user_id != user.id:
+        return jsonify({"error": "No autorizado"}), 403
+
+    try:
+        if "img" in body and body["img"]:
+            upload_result = cloudinary.uploader.upload(body["img"], folder="handybox_users")
+            service.img = upload_result.get("secure_url")
+
+        if "video" in body and body["video"]:
+            upload_result = cloudinary.uploader.upload(
+                body["video"], folder="handybox_users", resource_type="video"
+            )
+            service.video = upload_result.get("secure_url")
+
+        service.name = body.get("name", service.name)
+        service.description = body.get("description", service.description)
+        service.price = body.get("price", service.price)
+        service.url = body.get("url", service.url)
+        service.rate = body.get("rate", service.rate)
+
+        db.session.commit()
+        return jsonify(service.serialize()), 200
+
+    except Exception as e:
+        print("ERROR ACTUALIZANDO SERVICIO:", e)
+        return jsonify({"error": "Error del servidor"}), 500
+    
+
+@api.route('/my-services', methods=['GET'])
+@jwt_required()
+def get_my_services():
+    current_user_id = int(get_jwt_identity())
+    user = User.query.get(current_user_id)
+
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    my_services = Service.query.filter_by(user_id=user.id).all()
+    return jsonify([s.serialize() for s in my_services]), 200
+
+
+@api.route('/services/<int:id>/status', methods=['PATCH'])
+@jwt_required()
+def toggle_service_status(id):
+    body = request.get_json()
+    if not body or "status" not in body:
+        return jsonify({"error": "Falta el estado"}), 400
+
+    current_user_id = int(get_jwt_identity())
+    user = User.query.get(current_user_id)
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+
+    service = Service.query.get(id)
+    if not service or service.user_id != user.id:
+        return jsonify({"error": "No autorizado"}), 403
+
+    try:
+        service.status = body["status"]
+        db.session.commit()
+        return jsonify({"success": True, "status": service.status}), 200
+    except Exception as e:
+        print("ERROR CAMBIANDO STATUS:", e)
+        return jsonify({"error": "Error del servidor"}), 500

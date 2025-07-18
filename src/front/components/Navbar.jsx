@@ -71,6 +71,7 @@ export const Navbar = () => {
 			{ to: "/createService", label: "Crear Servicio" },
 			{ to: "/professional-services", label: "Servicios contratados a mí" },
 			{ to: "/create-user-detail", label: "Crear Detalle de Usuario" },
+			{ to: "/select-service-to-modify", label: "Modificar Servicio" },
 			{ to: "/login", label: "Logout" }
 		]
 	}
