@@ -19,8 +19,6 @@ export const Home = () => {
       try {
         const allServices = await getAllServices();
         setServices(Array.isArray(allServices) ? allServices.slice(0, 3) : []);
-
-        // Obtener todos los usuarios y filtrar por rol "professional" en el frontend
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         const res = await fetch(`${backendUrl}api/user/`);
         const users = await res.json();
@@ -50,7 +48,7 @@ export const Home = () => {
     setErrorMsg("");
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
-      const res = await fetch(`${backendUrl}api/send-featured-professional`, {
+      const res = await fetch(`${backendUrl}api/user/send-featured-professional`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -108,14 +106,13 @@ export const Home = () => {
           </div>
         </div>
       </div>
-      {/* Sección de destacados */}
       <div className="container py-5 home-featured">
         <div className="row mb-5">
           <div className="col-12">
-            <h2 className="fw-bold text-center mb-4 home-featured-title">
+            <h2 className="fw-bold text-center mb-5 mt-5 home-featured-title">
               <a href="/services" className="home-featured-link">Servicios destacados</a>
             </h2>
-            <div className="d-flex flex-wrap justify-content-center gap-4">
+            <div className="d-flex flex-wrap justify-content-center gap-4 mb-5 mt-5">
               {loading ? <span>Cargando...</span> :
                 services.map((service, idx) => (
                   <div
@@ -140,8 +137,8 @@ export const Home = () => {
         </div>
         <div className="row">
           <div className="col-12">
-            <h2 className="fw-bold text-center mb-4 home-featured-title">Profesionales destacados</h2>
-            <div className="d-flex flex-wrap justify-content-center gap-4">
+            <h2 className="fw-bold text-center mb-5 mt-5 home-featured-title">Profesionales destacados</h2>
+            <div className="d-flex flex-wrap justify-content-center gap-4 mb-5 mt-5">
               {loading ? <span>Cargando...</span> :
                 professionals.map((prof, idx) => (
                   <div

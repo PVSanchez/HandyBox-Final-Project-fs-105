@@ -4,6 +4,17 @@
   --deep-blue: #1f3a93;
   --light-bg: #f4f4f4;
 }
+.home-featured-card .card-description {
+  height: 56px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
 .home-featured-sticker {
   position: absolute;
   top: 12px;
@@ -179,7 +190,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1050;
   display: flex !important;
   align-items: center;
@@ -191,7 +202,6 @@ body {
   display: block !important;
   opacity: 1 !important;
   visibility: visible !important;
-}
 }
 .home-modal-error {
   margin-bottom: 1rem;
